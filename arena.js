@@ -13,19 +13,17 @@ async function arena(page) {
         }
     }
     if (errorCode === '4') {
-        setTimeout(async () => {
-            await arena(page);
-        }, error * 1000);
+        return error;
     } else if (errorCode === '5') {
-        await arena(page);
+        return await arena(page);
     } else {
-        await _fight(page);
+        return await _fight(page);
     }
 }
 
 async function _fight(page) {
     await page.click('table>tbody>tr>td>div>a.simple-but.border.gray.mb1');
-    await arena(page);
+    return await arena(page);
 }
 
 module.exports = arena;
