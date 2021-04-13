@@ -39,10 +39,10 @@ async function farm(page) {
             await page.click(`a[href="?ib=${mutant}&mod=k"]`);
         } catch (e) {}
         try {
-            await page.click(`a[href="?ib=${mutant}&mod=p"]`);
+            await page.click(`a[href="?ib=${mutant}&mod=w"]`);
         } catch (e) {}
         try {
-            await page.click(`a[href="?ib=${mutant}&mod=w"]`);
+            await page.click(`a[href="?ib=${mutant}&mod=p"]`);
         } catch (e) {}
     }
 
