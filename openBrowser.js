@@ -9,6 +9,7 @@ async function openBrowser() {
     const page = (await browser.pages())[0];
     await page.goto('https://sta1kers.ru/login.php');
     await page.setViewport({width: 800, height: 900});
+
     return page;
 }
 
