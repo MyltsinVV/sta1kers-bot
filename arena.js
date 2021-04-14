@@ -17,13 +17,9 @@ async function arena(page) {
     } else if (errorCode === '5') {
         return await arena(page);
     } else {
-        return await _fight(page);
+        await page.click('table>tbody>tr>td>div>a.simple-but.border.gray.mb1');
+        return await arena(page);
     }
-}
-
-async function _fight(page) {
-    await page.click('table>tbody>tr>td>div>a.simple-but.border.gray.mb1');
-    return await arena(page);
 }
 
 module.exports = arena;

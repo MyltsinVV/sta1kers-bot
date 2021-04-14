@@ -1,8 +1,10 @@
 const arena = require('./arena');
+const {getPage} = require('./constants');
 
 let farmCount = 30;
 
-async function farm(page) {
+async function farm() {
+    const page = getPage();
     await page.goto('https://sta1kers.ru/zona.php');
 
     const hp = await page.evaluate(() =>

@@ -10,7 +10,7 @@ async function searchSwag() {
 }
 
 /**
- * Поиск хабара на юпитере
+ * Поиск хабара на Юпитере
  */
 async function searchSwagJupiter() {
     // Перавая полоса
@@ -62,6 +62,14 @@ async function searchSwagJupiter() {
     await walk(8);
 }
 
+/**
+ * Поиск хабара в Припяти
+ */
+async function searchSwagPripyat() {
+
+}
+
 module.exports = {
-    searchSwagJupiter
+    searchSwagJupiter,
+    searchSwagPripyat
 };
