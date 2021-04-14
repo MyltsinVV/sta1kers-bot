@@ -1,20 +1,14 @@
-// 1 - вверх
-// 4 - влево
-// 5 - вправо
-// 8 - вниз
+const {getGoKey, getPage} = require('./constants');
 
-//
-
-const mainUrl = 'https://sta1kers.ru/zona.php';
-let goKey;
-
-async function walk(page) {
-    await page.goto(mainUrl);
-    goKey = (await page.evaluate(() =>
-        document.querySelector('.linkww > a.linkw')?.getAttribute('href')
-    )).split('&')[1].split('=')[1];
-
-    await page.click(`a[href="?go=8&go_key=${goKey}"]`);
+/*
+    Возможные route
+    1 - вверх
+    4 - влево
+    5 - вправо
+    8 - вниз
+*/
+async function walk(route) {
+    await getPage().click(`a[href="?go=${route}&go_key=${getGoKey()}"]`);
 }
 
 module.exports = walk;
