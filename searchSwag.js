@@ -6,7 +6,9 @@ async function searchSwag() {
 
     const content = await page.content();
     const index = content.indexOf('var cells = "');
-    await page.goto(`https://sta1kers.ru/zona.php?hb_pass=${content.slice(index + 13, index + 18)}`);
+    if (index > 0) {
+        await page.goto(`https://sta1kers.ru/zona.php?hb_pass=${content.slice(index + 13, index + 18)}`);
+    }
 }
 
 /**
@@ -55,7 +57,7 @@ async function searchSwagJupiter() {
     await walk(1);
     await walk(5);
     await searchSwag();
-    // Возвращение домой
+    // Возвращение на базу
     await walk(4);
     await walk(4);
     await walk(4);
@@ -66,7 +68,53 @@ async function searchSwagJupiter() {
  * Поиск хабара в Припяти
  */
 async function searchSwagPripyat() {
-
+    // Пятая полоса
+    await walk(1);
+    await searchSwag();
+    await walk(1);
+    await searchSwag();
+    await walk(1);
+    await searchSwag();
+    // Четвёртая полоса
+    await walk(4);
+    await walk(8);
+    await walk(8);
+    await searchSwag();
+    await walk(8);
+    await searchSwag();
+    // Треться полоса
+    await walk(4);
+    await searchSwag();
+    await walk(1);
+    await walk(1);
+    await searchSwag();
+    await walk(1);
+    await searchSwag();
+    // Вторая полоса
+    await walk(4);
+    await walk(8);
+    await searchSwag();
+    await walk(8);
+    await searchSwag();
+    await walk(8);
+    await searchSwag();
+    // Первая полоса
+    await walk(4);
+    await searchSwag();
+    await walk(1);
+    await searchSwag();
+    await walk(1);
+    await searchSwag();
+    await walk(1);
+    await searchSwag();
+    // Возваращение на базу
+    await walk(5);
+    await walk(5);
+    await walk(5);
+    await walk(5);
+    await walk(8);
+    await walk(8);
+    await walk(8);
 }
 
 module.exports = {
