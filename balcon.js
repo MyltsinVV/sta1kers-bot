@@ -6,5 +6,5 @@ const { searchSwagPripyat } = require('./searchSwag');
     await startGame('balcon', '12345');
 
     await searchSwagPripyat();
-    await farm();
+    // await farm();
 })();
