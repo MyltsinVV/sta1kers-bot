@@ -12,7 +12,9 @@ async function arena(page) {
             errorCode = b;
         }
     }
-    if (errorCode === '4') {
+    if (errorCode === '1') {
+        // Я тут труп, нужно выличиться и потом заново запустить арену
+    } else if (errorCode === '4') {
         return error;
     } else if (errorCode === '5') {
         return await arena(page);
