@@ -2,6 +2,7 @@ const startGame = require('./startGame');
 const farm = require('./farm');
 const arena = require('./arena');
 const { searchSwagPripyat } = require('./searchSwag');
+const walk = require('./walk');
 
 const {mainUrl, getPage} = require('./constants');
 
@@ -45,5 +46,6 @@ const arr = [
         }, 1000)
     }
 
+    // await searchSwagPripyat();
     await test();
 })();
