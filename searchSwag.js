@@ -1,6 +1,9 @@
-const {getPage} = require('./constants');
-const {walk} = require('./walk');
+const {getPage, mainUrl} = require('./constants');
+const {walk, walkNeighborhood} = require('./walk');
 
+/**
+ * Найти хабар на локации
+ */
 async function searchSwag() {
 	const page = getPage();
 
@@ -9,6 +12,13 @@ async function searchSwag() {
 	if (index > 0) {
 		await page.goto(`https://sta1kers.ru/zona.php?hb_pass=${ content.slice(index + 13, index + 18) }`);
 	}
+}
+
+/**
+ * Поиск хабара на Затоне
+ */
+async function searchSwagBackwater() {
+
 }
 
 /**
@@ -117,7 +127,23 @@ async function searchSwagPripyat() {
 	await walk(8);
 }
 
+/**
+ * Сдача хабара Вобле
+ */
+async function searchSwagDone() {
+	const page = getPage();
+	await walkNeighborhood('e');
+	await page.goto('https://sta1kers.ru/npc/vobla.php?mod=map&zona=1&prize=take');
+	await page.goto('https://sta1kers.ru/npc/vobla.php?mod=map&zona=2&prize=take');
+	await page.goto('https://sta1kers.ru/npc/vobla.php?mod=map&zona=3&prize=take');
+	await page.goto(mainUrl);
+	await walkNeighborhood('c');
+}
+
 module.exports = {
 	searchSwagJupiter,
 	searchSwagPripyat,
+	searchSwagBackwater,
+
+	searchSwagDone
 };
