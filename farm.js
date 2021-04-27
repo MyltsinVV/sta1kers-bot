@@ -1,17 +1,11 @@
 const {mainUrl, getPage} = require('./constants');
+const arena = require('./arena');
 
-/**
- * Прачечная -[121, 122, 123, 124]
- * «Лоза» (Запад) - [131, 132, 133, 134]
- * Гастроном (Юг) - [129, 130, 993, 994]
- */
-async function farm(mutants) {
+async function murderMutants() {
 	const page = getPage();
 	await page.goto(mainUrl);
 
-	if (!mutants) {
-		mutants = [121, 122, 123, 124];
-	}
+	const mutants = [121, 122, 123, 124];
 
 	for (const mutant of mutants) {
 		try {
@@ -26,4 +20,44 @@ async function farm(mutants) {
 	}
 }
 
-module.exports = farm;
+const arr = [
+	'arena',
+	'farm',
+];
+
+async function farm() {
+	await series();
+}
+
+async function series() {
+	const page = getPage();
+	const hp = await page.evaluate(() => document.querySelector('img[src="../img/ico/life.png"]').parentNode.innerText);
+
+	if (hp.trim() === '0') {
+		const apte4ka = await page.evaluate(() =>
+				document.querySelector('small.stalker_link > img[src="../img/ico/apte4ka.png"]')?.parentNode?.innerText,
+		);
+		if (!apte4ka) {
+			await page.goto(`${ mainUrl }?&apt=use`);
+		}
+	} else {
+		const item = arr.shift();
+		if (item === 'arena') {
+			const time = await arena(page);
+			setTimeout(() => {
+				arr.unshift('arena');
+			}, time * 1000);
+		} else if (item === 'farm') {
+			await murderMutants();
+			arr.push('farm');
+		}
+	}
+
+	setTimeout(async() => {
+		await series();
+	}, 1000);
+}
+
+module.exports = {
+	farm,
+};

@@ -24,4 +24,10 @@ async function walk(route) {
 	}
 }
 
-module.exports = walk;
+async function transitionFromPripyatToJupiter() {
+
+}
+
+module.exports = {
+	walk
+};

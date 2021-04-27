@@ -1,5 +1,5 @@
 const {getPage} = require('./constants');
-const walk = require('./walk');
+const {walk} = require('./walk');
 
 async function searchSwag() {
 	const page = getPage();

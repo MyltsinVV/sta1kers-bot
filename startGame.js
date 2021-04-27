@@ -26,4 +26,6 @@ async function startGame(nick, password) {
 	setGoKey(goKey);
 }
 
-module.exports = startGame;
+module.exports = {
+	startGame
+};
