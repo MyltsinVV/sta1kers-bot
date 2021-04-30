@@ -5,7 +5,8 @@ async function murderMutants() {
 	const page = getPage();
 	await page.goto(mainUrl);
 
-	const mutants = [121, 122, 123, 124];
+	// const mutants = [121, 122, 123, 124];
+	const mutants = [1073, 1074, 1075, 1076];
 
 	for (const mutant of mutants) {
 		try {
