@@ -47,7 +47,10 @@ async function walkNeighborhood(route) {
  * Переход из Припяти на Юпитер
  */
 async function transitionFromPripyatToJupiter() {
-
+	const page = getPage();
+	await page.goto(`https://sta1kers.ru/npc/garik.php?quest=94`);
+	await page.goto(`https://sta1kers.ru/npc/garik.php?quest=95`);
+	await page.goto(mainUrl);
 }
 
 /**

@@ -18,14 +18,55 @@ async function searchSwag() {
  * Поиск хабара на Затоне
  */
 async function searchSwagBackwater() {
-
+	// Первая полоса
+	await walk(1);
+	await walk(4);
+	await walk(4);
+	await searchSwag();
+	await walk(8);
+	await walk(8);
+	await searchSwag();
+	await walk(8);
+	await walk(8);
+	// Вторая полоса
+	await walk(5);
+	await searchSwag();
+	await walk(1);
+	await searchSwag();
+	await walk(1);
+	await searchSwag();
+	await walk(1);
+	await searchSwag();
+	await walk(1);
+	await searchSwag();
+	// Третья полоса
+	await walk(5);
+	await searchSwag();
+	await walk(8);
+	await walk(8);
+	await searchSwag();
+	// Четвёртая полоса
+	await walk(5);
+	await searchSwag();
+	await walk(8);
+	// Пятая полоса
+	await walk(5);
+	await searchSwag();
+	await walk(8);
+	await searchSwag();
+	// Возвращаемся домой
+	await walk(4);
+	await walk(4);
+	await walk(1);
+	await walk(1);
+	await walk(1);
 }
 
 /**
  * Поиск хабара на Юпитере
  */
 async function searchSwagJupiter() {
-	// Перавая полоса
+	// Первая полоса
 	await walk(4);
 	await searchSwag();
 	await walk(8);

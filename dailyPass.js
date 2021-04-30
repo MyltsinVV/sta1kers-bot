@@ -1,32 +1,14 @@
-const {mainUrl, getPage} = require('./constants');
 const {searchSwagPripyat, searchSwagJupiter, searchSwagBackwater, searchSwagDone} = require('./searchSwag');
-const {transitionFromJupiterToBackwater} = require('./walk');
+const {transitionFromJupiterToBackwater, transitionFromPripyatToJupiter} = require('./walk');
+const {takeTaskForStrelok} = require('./questions');
 
 async function dailyPass() {
-	// Поиск хабара в Припяти (Готово)
-	// await searchSwagPripyat();
-
-	// Взять задание у Стрелка
-
-	// Переход на Юпитер
-
-	// Поиск хабара на Юпитере (Готово)
-	// await searchSwagJupiter();
-
-	// Выполнение Квеста от Стрелка
-
-	// Переход на Затон (Готово)
-	// await transitionFromJupiterToBackwater();
-
-	// Поиск хабара на Затоне
-	await searchSwagBackwater();
-
-	// Сдача хабара Вобле (Готово)
-	// await searchSwagDone();
-
-	// Переход в Припиять
-
-	// Сдача квеста Стрелку
+	await searchSwagPripyat(); // Поиск хабара в Припяти (Готово)
+	await transitionFromPripyatToJupiter(); // Переход на Юпитер (Готово)
+	await searchSwagJupiter(); // Поиск хабара на Юпитере (Готово)
+	await transitionFromJupiterToBackwater(); // Переход на Затон (Готово)
+	await searchSwagBackwater(); // Поиск хабара на Затоне (Готово)
+	await searchSwagDone(); // Сдача хабара Вобле (Готово)
 }
 
 module.exports = {
