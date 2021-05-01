@@ -1,91 +1,33 @@
-setInterval(function() {
-	console.log(123);
-	document.querySelector('a[href="?ib=994&mod=w"]').click();
-	document.querySelector('a[href="?ib=994&mod=p"]').click();
-	document.querySelector('a[href="zona.php"]').click();
-}, 5000);
-
 (function(){
-	var hT;
-	var hB;
-	var hU;
-	var w;
-	var _period;
-	var _hold;
-	var _jqObj;
-	var _selector;
-	var _l = window.document.location.toString().replace(/#.*$/, '');
-	var _fields = {length:0};
-	var _found;
-	var _clicked = false;
-	if(1 || typeof(jQuery) === "undefined"){
-		var script = document.createElement("script");
-		script.src = "//bot11x11.ru/!/jquery.js";
-		script.onload = preBot;
-		if(document.getElementsByTagName("head")[0]){
-			document.getElementsByTagName("head")[0].appendChild(script);
-		}else{
-			document.getElementsByTagName("html")[0].appendChild(script);
-		}
-	}else{
-		preBot();
-	}
-	function preBot(){
-		jQuery("body").html("<center>Инициализация...</center>");
-		setTimeout(ui, 100);
-	}
-	function ui(){
-		if(!jQuery.fn.sortable){
-			var script = document.createElement("script");
-			script.src = "//bot11x11.ru/!/jquery-ui.js";
-			script.onload = bot;
-			if(document.getElementsByTagName("head")[0]){
-				document.getElementsByTagName("head")[0].appendChild(script);
-			}else{
-				document.getElementsByTagName("html")[0].appendChild(script);
-			}
-		}else{
-			bot();
-		}
-	}
-	function showSave(){
-		if(jQuery("ul li").length){
-			jQuery("#help").hide();
-		}else{
-			jQuery("#help").show();
-		}
-		if(jQuery("#save").find("input[name=data]").val() == jQuery("body>div").html()){
-			jQuery("#save").hide();
-		}else{
-			jQuery("#save").show();
-		}
-	}
-	function period(){
-		_period = parseFloat(jQuery("#period").val());
-		if(!(_period > 0)){
-			_period = 1;
-		}
-		jQuery("#period").attr("value", _period);
-	}
-	function hold(){
-		_hold = parseFloat(jQuery("#hold").val());
-		if(!(_hold >= 0)){
-			_hold = 0;
-		}
-		jQuery("#hold").attr("value", _hold);
-	}
-	function bot(){
+	let hT;
+	let hU;
+	let w;
+	let _period;
+	let _hold;
+	let _jqObj;
+	let _selector;
+	let _l = window.document.location.toString().replace(/#.*$/, '');
+	let _fields = {length:0};
+	let _found;
+	let _clicked = false;
 
+	preBot();
+
+	function preBot(){
+		setTimeout(bot, 100);
+	}
+
+	function bot(){
 		jQuery.extend(jQuery.expr[":"], {
-			"starts-with": function(elem, i, data, set){
+			"starts-with": function(elem, i, data){
 				var text = jQuery.trim(jQuery(elem).text()), term = data[3];
 				return text.indexOf(term) === 0;
 			},
-			"ends-with": function(elem, i, data, set){
+			"ends-with": function(elem, i, data){
 				var text = jQuery.trim(jQuery(elem).text()), term = data[3];
 				return text.lastIndexOf(term) === text.length - term.length;
 			},
-			"matches": function(elem, i, data, set){
+			"matches": function(elem, i, data){
 				var text = jQuery.trim(jQuery(elem).text()), term = data[3];
 				var regex = new RegExp(term, 'i');
 				return regex.test(text);
@@ -193,8 +135,37 @@ setInterval(function() {
 		}
 		jQuery("ul li").addClass("hook");
 		onReady();
-		/*GOOGLE*/
 	}
+
+	function showSave(){
+		if(jQuery("ul li").length){
+			jQuery("#help").hide();
+		}else{
+			jQuery("#help").show();
+		}
+		if(jQuery("#save").find("input[name=data]").val() == jQuery("body>div").html()){
+			jQuery("#save").hide();
+		}else{
+			jQuery("#save").show();
+		}
+	}
+
+	function period(){
+		_period = parseFloat(jQuery("#period").val());
+		if(!(_period > 0)){
+			_period = 1;
+		}
+		jQuery("#period").attr("value", _period);
+	}
+
+	function hold(){
+		_hold = parseFloat(jQuery("#hold").val());
+		if(!(_hold >= 0)){
+			_hold = 0;
+		}
+		jQuery("#hold").attr("value", _hold);
+	}
+
 	function addSelector(obj){
 		var _tagName = jQuery(obj).parent()[0].tagName;
 		var _id = jQuery(obj).parent().attr("id");
@@ -323,6 +294,7 @@ setInterval(function() {
 		jQuery("ul#unchecked li.hook a.selector:first").attr("title", selector);
 		return selector;
 	}
+
 	function onReady(){
 		clearInterval(hU);
 		var c = 0;
@@ -338,6 +310,7 @@ setInterval(function() {
 			c++;
 		}, 500);
 	}
+
 	function get(){
 		try{
 			var l = document.location.toString();
@@ -358,6 +331,7 @@ setInterval(function() {
 			onReady();
 		});
 	}
+
 	function hook(){
 		jQuery("ul li.hook a.selector").click(function(){
 			jQuery(this).next("span.tools").hide();
@@ -572,6 +546,7 @@ setInterval(function() {
 		});
 		jQuery("body :not(.d5da2c0b8063b4a78afe8a08ea097491)", w.document).addClass("d5da2c0b8063b4a78afe8a08ea097491");
 	}
+
 	function sort(){
 		jQuery("ul#checked").append(jQuery("ul#unchecked li input:checked").closest("li"));
 		jQuery("ul#unchecked").prepend(jQuery("ul#checked li input:not(:checked)").closest("li"));
@@ -596,6 +571,7 @@ setInterval(function() {
 			});
 		}while(moved);
 	}
+
 	function showDeleteUnchecked(){
 		if(jQuery("ul li input:not(:checked)").length){
 			jQuery("a[href='#delete-unchecked']").show();
@@ -603,6 +579,7 @@ setInterval(function() {
 			jQuery("a[href='#delete-unchecked']").hide();
 		}
 	}
+
 	function audio(attr){
 		jQuery("audio").remove();
 		if(!attr){
@@ -616,10 +593,12 @@ setInterval(function() {
 		}
 		jQuery("<audio>").appendTo("body").attr(attr);
 	}
+
 	function stop(){
 		_found = true;
 		jQuery("#stop").trigger("click");
 	}
+
 	function pause(wait){
 		_found = true;
 		clearTimeout(hT);
@@ -631,10 +610,12 @@ setInterval(function() {
 			w.document.location = _l;
 		}, 1000 * wait * (Math.random() + 1));
 	}
+
 	function js(url){
 		_found = eval(url.replace("\\", "\\\\").replace("\n", "\\n").replace("\r", "\\r"));
 		/*	jQuery.getScript(url);*/
 	}
+
 	function download(){
 		jQuery("body>span").html(
 			"<a href='//bot11x11.ru/!/csv/d5da2c0b8063b4a78afe8a08ea097491.csv' style='position: absolute; top: 0; right: 50px'>Скачать</a>" +
@@ -651,6 +632,7 @@ setInterval(function() {
 			return false;
 		});
 	}
+
 	function store(params){
 		var field = {};
 		if(!params){
@@ -705,6 +687,7 @@ setInterval(function() {
 		_fields[params.name] = s;
 		_fields.length++;
 	}
+
 	function run(){
 		clearTimeout(hT);
 		hT = setTimeout(function(){
