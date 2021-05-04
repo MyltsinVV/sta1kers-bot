@@ -30,7 +30,7 @@
 			<iframe
 				frameborder=\'0\' 
 				src=\'${l}\' 
-				style=\'z-index: 100; position: fixed; top: 26px; height: 100vh; width: 50vw\'
+				style=\'z-index: 100; position: fixed; top: 26px; height: calc(100% - 26px); width: 100%; left: 0;\'
 			>
 			</iframe>
 			<span></span>
