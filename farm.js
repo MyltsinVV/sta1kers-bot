@@ -6,15 +6,10 @@ async function murderMutants() {
 	await page.goto(mainUrl);
 
 	// const mutants = [121, 122, 123, 124];
-	const mutants = [1073, 1074, 1075, 1076];
+	// const mutants = [1073, 1074, 1075, 1076];
+	const mutants = [4, 5, 6, 7];
 
 	for (const mutant of mutants) {
-		try {
-			await page.click(`a[href="?ib=${ mutant }&mod=k"]`);
-		} catch (e) {}
-		try {
-			await page.click(`a[href="?ib=${ mutant }&mod=w"]`);
-		} catch (e) {}
 		try {
 			await page.click(`a[href="?ib=${ mutant }&mod=p"]`);
 		} catch (e) {}
@@ -56,7 +51,7 @@ async function series() {
 
 	setTimeout(async() => {
 		await series();
-	}, 1000);
+	}, 2000);
 }
 
 module.exports = {
