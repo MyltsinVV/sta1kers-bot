@@ -1,13 +1,13 @@
 (function(){
 	const urlZona = 'https://sta1kers.ru/zona.php';
 	const urlDungeon = 'https://sta1kers.ru/dungeon/';
-	let arr;
+
+	let farmArr;
+
 	let test;
 	let test2;
-	let test3;
 
 	let start;
-	let start2;
 
 	let goKey;
 
@@ -57,12 +57,6 @@
 					<input type=\'button\' id=\'run\' value=\'Старт\'>
 					<input type=\'button\' id=\'stop\' value=\'Остановить\' style=\'display: none\'>
 				</label>
-				<span style="margin-left: 20px"></span>
-				<label for="run">
-					Логово снорков
-					<input type=\'button\' id=\'run2\' value=\'Старт\'>
-					<input type=\'button\' id=\'stop2\' value=\'Остановить\' style=\'display: none\'>
-				</label>
 			</div>
 		`);
 
@@ -82,21 +76,6 @@
 			return false;
 		});
 
-		jQuery('#run2').click(function() {
-			start2 = true;
-			jQuery(this).hide();
-			jQuery('#stop2').show();
-			go2();
-			return false;
-		});
-		jQuery('#stop2').click(function() {
-			start2 = false;
-			jQuery(this).hide();
-			jQuery('#run2').show();
-			clearTimeout(test3);
-			return false;
-		});
-
 		await goto(urlZona);
 		goKey = getFrame().contentDocument
 			.querySelector('#location .linkw > a.linkw')?.getAttribute('href')
@@ -108,7 +87,7 @@
 	}
 
 	async function go() {
-		arr = [
+		farmArr = [
 			'arena',
 			'farm'
 		];
@@ -125,21 +104,23 @@
 				await goto(`${ urlZona }?&apt=use`);
 			}
 		} else {
-			const item = arr.shift();
+			const item = farmArr.shift();
 			if (item === 'arena') {
 				const error = await arena();
 				if (start) {
+					clearTimeout(test2);
 					test2 = setTimeout(() => {
-						arr.unshift('arena');
+						farmArr.unshift('arena');
 					}, 1000 * error);
 				}
 			} else if (item === 'farm') {
 				await murderMutants();
-				arr.push('farm');
+				farmArr.push('farm');
 			}
 		}
 
 		if (start) {
+			clearTimeout(test);
 			test = setTimeout(async function() {
 				await series();
 			}, 2000);
@@ -176,7 +157,7 @@
 		});
 	}
 
-	async function murderMutants(dungeon) 	{
+	async function murderMutants(dungeon) {
 		return new Promise(async function(resolve) {
 			await goto(dungeon ? urlDungeon : urlZona);
 			const doc = getFrame().contentDocument;
@@ -208,17 +189,8 @@
 		return new Promise(resolve => {
 			setTimeout(function() {
 				resolve(true);
-			}, sec * 1000 )
+			}, sec * 1000)
 		})
-	}
-
-	async function go2() {
-		await snorkLair();
-		if (start2) {
-			test3 = setTimeout(async function() {
-				await snorkLair();
-			}, 0);
-		}
 	}
 
 	async function snorkLair() {
