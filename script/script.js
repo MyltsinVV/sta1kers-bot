@@ -96,7 +96,7 @@
 
 	async function series() {
 		const doc = getFrame().contentDocument;
-		const hp = doc.querySelector('img[src="../img/ico/life.png"]').parentNode.innerText;
+		const hp = doc.querySelector('#top table.stalker_link.stalker_text td:first-child').innerText;
 
 		if (hp.trim() === '0') {
 			await goto(`${ urlZona }?&apt=use`);

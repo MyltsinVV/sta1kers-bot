@@ -26,7 +26,7 @@ async function farm() {
 
 async function series() {
 	const page = getPage();
-	const hp = await page.evaluate(() => document.querySelector('img[src="../img/ico/life.png"]').parentNode.innerText);
+	const hp = await page.evaluate(() => document.querySelector('#top table.stalker_link.stalker_text td:first-child').innerText);
 
 	if (hp.trim() === '0') {
 		await page.goto(`${ mainUrl }?&apt=use`);
