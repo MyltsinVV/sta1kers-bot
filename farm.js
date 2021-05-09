@@ -5,14 +5,13 @@ async function murderMutants() {
 	const page = getPage();
 	await page.goto(mainUrl);
 
-	// const mutants = [121, 122, 123, 124];
-	// const mutants = [1073, 1074, 1075, 1076];
-	const mutants = [4, 5, 6, 7];
+	const mutant = await page.evaluate(() => {
+		const mutants = document.querySelectorAll('#mutants img[title="Пистолет"]');
+		return mutants[mutants.length - 1]?.parentNode?.getAttribute('href');
+	});
 
-	for (const mutant of mutants) {
-		try {
-			await page.click(`a[href="?ib=${ mutant }&mod=p"]`);
-		} catch (e) {}
+	if (mutant) {
+		await page.goto(mainUrl + mutant);
 	}
 }
 

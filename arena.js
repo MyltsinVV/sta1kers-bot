@@ -13,14 +13,14 @@ async function arena(page) {
 		}
 	}
 	if (errorCode === '1') {
-		// Я тут труп, нужно выличиться и потом заново запустить арену
+		return 0;
 	} else if (errorCode === '4') {
 		return error;
 	} else if (errorCode === '5') {
-		return await arena(page);
+		return 0;
 	} else {
 		await page.click('table>tbody>tr>td>div>a.simple-but.border.gray.mb1');
-		return await arena(page);
+		return 0;
 	}
 }
 
