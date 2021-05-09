@@ -29,12 +29,7 @@ async function series() {
 	const hp = await page.evaluate(() => document.querySelector('img[src="../img/ico/life.png"]').parentNode.innerText);
 
 	if (hp.trim() === '0') {
-		const apte4ka = await page.evaluate(() =>
-				document.querySelector('small.stalker_link > img[src="../img/ico/apte4ka.png"]')?.parentNode?.innerText,
-		);
-		if (!apte4ka) {
-			await page.goto(`${ mainUrl }?&apt=use`);
-		}
+		await page.goto(`${ mainUrl }?&apt=use`);
 	} else {
 		const item = arr.shift();
 		if (item === 'arena') {

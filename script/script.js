@@ -99,10 +99,7 @@
 		const hp = doc.querySelector('img[src="../img/ico/life.png"]').parentNode.innerText;
 
 		if (hp.trim() === '0') {
-			const apte4ka = doc.querySelector('small.stalker_link > img[src="../img/ico/apte4ka.png"]')?.parentNode?.innerText;
-			if (!apte4ka) {
-				await goto(`${ urlZona }?&apt=use`);
-			}
+			await goto(`${ urlZona }?&apt=use`);
 		} else {
 			const item = farmArr.shift();
 			if (item === 'arena') {
