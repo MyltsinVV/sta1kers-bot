@@ -37,12 +37,11 @@
 		jQuery('body').html(`
 			<iframe
 				id="testbot"
-				frameborder='0' 
 				src='${l}' 
-				style='z-index: 100; position: fixed; top: 26px; height: calc(100% - 26px); width: 100%; left: 0;'
+				style='z-index: 100; position: fixed; top: 26px; height: calc(100% - 26px); width: 100%; left: 0; border: unset;'
 			>
 			</iframe>
-			<span></span>
+			<span></span>	
 			<div>
 				<style>
 					input[type="checkbox"]{
@@ -58,6 +57,7 @@
 					<input type='button' id='stop' value='Остановить' style='display: none'>
 				</label>
 				<input type='button' id='daily' value='Daily'>
+				<input type='button' id='artifact' value='Search artifact'>
 			</div>
 		`);
 
@@ -79,6 +79,9 @@
 
 		document.querySelector('#daily').addEventListener('click', async function() {
 			await daily();
+		});
+		document.querySelector('#artifact').addEventListener('click', async function() {
+			await searchArtifact(true);
 		});
 
 		await goto(urlZona);
@@ -388,5 +391,84 @@
 				resolve(true);
 			}, sec * 1000)
 		})
+	}
+
+	async function searchArtifact(start, newSearch) {
+		if (start) {
+			await goto(`${ urlZona }?mod=start_search`);
+			await awaitSec(30);
+			await goto(urlZona);
+		}
+		if (newSearch) {
+			await goto(`${ urlZona }?mod=new_search`);
+			await awaitSec(30);
+			await goto(urlZona);
+		}
+
+		const doc = getFrame().contentDocument;
+		const artifactInfo = doc.querySelector('#artefacts .q2.lal i').innerHTML;
+		const distanceText = 'Расстояние: ';
+		const distanceIndex = artifactInfo.indexOf(distanceText);
+		const distance = Number(artifactInfo.slice(distanceIndex + distanceText.length, distanceIndex + distanceText.length + 2).trim());
+
+		if (distance === 0) return;
+
+		await goto(urlZona);
+
+		const hpPercent = Number(doc.querySelectorAll('#top .rblock.blue.esmall')[1]
+			.querySelector('td:last-child .value-block.lh1').textContent.slice(0, -1));
+		const boltText = 'Болты: ';
+		const boltIndex = artifactInfo.indexOf(boltText);
+		const countBolt = Number(artifactInfo.slice(boltIndex + boltText.length, boltIndex + boltText.length + 1));
+		const maxChargeText = 'Макс. заряд: ';
+		const maxChargeIndex = artifactInfo.indexOf(maxChargeText);
+		const countMaxCharge = Number(artifactInfo.slice(maxChargeIndex + maxChargeText.length, maxChargeIndex + maxChargeText.length + 1));
+		let indicator;
+		if (artifactInfo.indexOf('green') > 0) {
+			indicator = 'green';
+		} else if (artifactInfo.indexOf('yellow') > 0) {
+			indicator = 'yellow';
+		} else if (artifactInfo.indexOf('red') > 0) {
+			indicator = 'red';
+		}
+
+		if (countBolt >= distance) {
+			await goto(`${ urlZona }?mod=bolt_search`);
+			await goto(`${ urlZona }?mod=step_search`);
+			await searchArtifact();
+			return;
+		}
+
+		if (indicator === 'red' && countBolt > 0) {
+			await goto(`${ urlZona }?mod=bolt_search`);
+			await goto(`${ urlZona }?mod=step_search`);
+			await searchArtifact();
+			return;
+		}
+
+		if (indicator === 'yellow' && hpPercent > 72) {
+			await goto(`${ urlZona }?mod=step_search`);
+			await searchArtifact();
+			return;
+		}
+
+		if (indicator === 'green' && hpPercent > 24) {
+			await goto(`${ urlZona }?mod=step_search`);
+			await searchArtifact();
+			return;
+		}
+
+		if (hpPercent > countMaxCharge * 12) {
+			await goto(`${ urlZona }?mod=step_search`);
+			await searchArtifact();
+		} else {
+			if (indicator === 'red' && countMaxCharge === 9) {
+				await searchArtifact(false, true);
+				return;
+			}
+			await goto(`${ urlZona }?&apt=use`);
+			await awaitSec(2);
+			await searchArtifact();
+		}
 	}
 })()
