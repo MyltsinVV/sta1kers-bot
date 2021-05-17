@@ -37,9 +37,9 @@
 		jQuery('body').html(`
 			<iframe
 				id="testbot"
-				frameborder=\'0\' 
-				src=\'${l}\' 
-				style=\'z-index: 100; position: fixed; top: 26px; height: calc(100% - 26px); width: 100%; left: 0;\'
+				frameborder='0' 
+				src='${l}' 
+				style='z-index: 100; position: fixed; top: 26px; height: calc(100% - 26px); width: 100%; left: 0;'
 			>
 			</iframe>
 			<span></span>
@@ -54,9 +54,10 @@
 				</style>
 				<label for="run">
 					Мобы + арена
-					<input type=\'button\' id=\'run\' value=\'Старт\'>
-					<input type=\'button\' id=\'stop\' value=\'Остановить\' style=\'display: none\'>
+					<input type='button' id='run' value='Старт'>
+					<input type='button' id='stop' value='Остановить' style='display: none'>
 				</label>
+				<input type='button' id='daily' value='Daily'>
 			</div>
 		`);
 
@@ -74,6 +75,10 @@
 			jQuery(this).hide();
 			jQuery('#run').show();
 			return false;
+		});
+
+		document.querySelector('#daily').addEventListener('click', async function() {
+			await daily();
 		});
 
 		await goto(urlZona);
@@ -94,11 +99,15 @@
 		await series();
 	}
 
-	async function series() {
+	function getHp() {
 		const doc = getFrame().contentDocument;
-		const hp = doc.querySelector('#top table.stalker_link.stalker_text td:first-child').innerText;
+		return doc.querySelector('#top table.stalker_link.stalker_text td:first-child').innerText.trim();
+	}
 
-		if (hp.trim() === '0') {
+	async function series() {
+		const hp = getHp();
+
+		if (hp === '0') {
 			await goto(`${ urlZona }?&apt=use`);
 		} else {
 			const item = farmArr.shift();
@@ -168,8 +177,9 @@
 
 	function goto(url) {
 		return new Promise(resolve => {
-			function a() {
+			async function a() {
 				getFrame().removeEventListener('load', a);
+				await awaitSec(0.5);
 				resolve(true);
 			}
 			getFrame().addEventListener('load', a);
@@ -178,8 +188,198 @@
 		})
 	}
 
+	async function searchSwag() {
+		const content = getFrame().contentDocument.querySelector('#main .stats script')?.innerHTML;
+		const index = content?.indexOf('var cells = "');
+		if (index > 0) {
+			await goto(`${ urlZona }?hb_pass=${ content.slice(index + 13, index + 18) }`);
+		}
+	}
+
+	async function daily() {
+		await searchSwagPripyat(); // Поиск хабара в Припяти
+		await transitionFromPripyatToJupiter(); // Переход на Юпитер
+		await searchSwagJupiter(); // Поиск хабара на Юпитере
+		await transitionFromJupiterToBackwater(); // Переход на Затон
+		await searchSwagBackwater(); // Поиск хабара на Затоне
+		await searchSwagDone(); // Сдача хабара Вобле
+	}
+
+	async function transitionFromPripyatToJupiter() {
+		await goto(`https://sta1kers.ru/npc/garik.php?quest=94`);
+		await goto(`https://sta1kers.ru/npc/garik.php?quest=95`);
+		await goto(urlZona);
+	}
+
+	async function transitionFromJupiterToBackwater() {
+		await goto(`https://sta1kers.ru/npc/locman.php?quest=10`);
+		await goto(`https://sta1kers.ru/npc/locman.php?quest=11`);
+		await goto(urlZona);
+	}
+
+	async function searchSwagDone() {
+		await walk('e');
+		await goto('https://sta1kers.ru/npc/vobla.php?mod=map&zona=1&prize=take');
+		await goto('https://sta1kers.ru/npc/vobla.php?mod=map&zona=2&prize=take');
+		await goto('https://sta1kers.ru/npc/vobla.php?mod=map&zona=3&prize=take');
+		await goto(urlZona);
+		await walk('c');
+	}
+
+	async function searchSwagPripyat() {
+		// Пятая полоса
+		await walk(1);
+		await searchSwag();
+		await walk(1);
+		await searchSwag();
+		await walk(1);
+		await searchSwag();
+		// Четвёртая полоса
+		await walk(4);
+		await walk(8);
+		await walk(8);
+		await searchSwag();
+		await walk(8);
+		await searchSwag();
+		// Треться полоса
+		await walk(4);
+		await searchSwag();
+		await walk(1);
+		await walk(1);
+		await searchSwag();
+		await walk(1);
+		await searchSwag();
+		// Вторая полоса
+		await walk(4);
+		await walk(8);
+		await searchSwag();
+		await walk(8);
+		await searchSwag();
+		await walk(8);
+		await searchSwag();
+		// Первая полоса
+		await walk(4);
+		await searchSwag();
+		await walk(1);
+		await searchSwag();
+		await walk(1);
+		await searchSwag();
+		await walk(1);
+		await searchSwag();
+		// Возваращение на базу
+		await walk(5);
+		await walk(5);
+		await walk(5);
+		await walk(5);
+		await walk(8);
+		await walk(8);
+		await walk(8);
+	}
+
+	async function searchSwagJupiter() {
+		// Первая полоса
+		await walk(4);
+		await searchSwag();
+		await walk(8);
+		await searchSwag();
+		await walk(8);
+		await searchSwag();
+		await walk(8);
+		await searchSwag();
+		// Вторая полоса
+		await walk(5);
+		await searchSwag();
+		await walk(1);
+		await searchSwag();
+		await walk(1);
+		await walk(1);
+		await walk(1);
+		await searchSwag();
+		// Третья полоса
+		await walk(5);
+		await searchSwag();
+		await walk(8);
+		await searchSwag();
+		await walk(8);
+		await searchSwag();
+		await walk(8);
+		await searchSwag();
+		await walk(8);
+		await searchSwag();
+		// Четвёртая и пятая полоса
+		await walk(5);
+		await walk(5);
+		await searchSwag();
+		await walk(4);
+		await walk(1);
+		await walk(1);
+		await searchSwag();
+		await walk(1);
+		await searchSwag();
+		await walk(1);
+		await walk(5);
+		await searchSwag();
+		// Возвращение на базу
+		await walk(4);
+		await walk(4);
+		await walk(4);
+		await walk(8);
+	}
+
+	async function searchSwagBackwater() {
+		// Первая полоса
+		await walk(1);
+		await walk(4);
+		await walk(4);
+		await searchSwag();
+		await walk(8);
+		await walk(8);
+		await searchSwag();
+		await walk(8);
+		await walk(8);
+		// Вторая полоса
+		await walk(5);
+		await searchSwag();
+		await walk(1);
+		await searchSwag();
+		await walk(1);
+		await searchSwag();
+		await walk(1);
+		await searchSwag();
+		await walk(1);
+		await searchSwag();
+		// Третья полоса
+		await walk(5);
+		await searchSwag();
+		await walk(8);
+		await walk(8);
+		await searchSwag();
+		// Четвёртая полоса
+		await walk(5);
+		await searchSwag();
+		await walk(8);
+		// Пятая полоса
+		await walk(5);
+		await searchSwag();
+		await walk(8);
+		await searchSwag();
+		// Возвращаемся домой
+		await walk(4);
+		await walk(4);
+		await walk(1);
+		await walk(1);
+		await walk(1);
+	}
+
 	async function walk(route) {
-		await goto(`${ urlZona }?${typeof route === 'number' ? '' : 'd'}go=${ route }&go_key=${ goKey }`);
+		const hp = getHp();
+		if (hp === '0') {
+			await goto(`${ urlZona }?&apt=use`);
+			await awaitSec(2);
+			await walk(route);
+		} else {
+			await goto(`${ urlZona }?${typeof route === 'number' ? '' : 'd'}go=${ route }&go_key=${ goKey }`);
+		}
 	}
 
 	async function awaitSec(sec) {
@@ -188,39 +388,5 @@
 				resolve(true);
 			}, sec * 1000)
 		})
-	}
-
-	async function snorkLair() {
-		return new Promise(async (resolve) => {
-			await walk('s');
-			await goto(urlZona + '?mod=create_party');
-			await goto(urlZona + '?mod=start_dungeon');
-			await goto(urlDungeon + '?next=true');
-			await murderMutants(true);
-			await awaitSec(2);
-			await murderMutants(true);
-			await goto(urlDungeon + '?next=true');
-			await goto(urlDungeon + '?go=1');
-			await murderMutantsDung();
-			await goto(urlDungeon + '?go=4');
-			await goto(urlDungeon + '?go=3');
-			await murderMutantsDung();
-			getFrame().contentDocument.querySelector('#party .input[type="text"]').value = 'афк';
-			getFrame().contentDocument.querySelector('#party .input[type="submit"]').click();
-			await awaitSec(1);
-			resolve(true);
-		})
-	}
-
-	async function murderMutantsDung() {
-		await murderMutants(true);
-		await awaitSec(2);
-		await murderMutants(true);
-		await awaitSec(2);
-		await murderMutants(true);
-		await awaitSec(2);
-		await murderMutants(true);
-		await awaitSec(2);
-		await murderMutants(true);
 	}
 })()
