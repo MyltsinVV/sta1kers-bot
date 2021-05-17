@@ -405,7 +405,7 @@
 			await goto(urlZona);
 		}
 
-		const doc = getFrame().contentDocument;
+		let doc = getFrame().contentDocument;
 		const artifactInfo = doc.querySelector('#artefacts .q2.lal i').innerHTML;
 		const distanceText = 'Расстояние: ';
 		const distanceIndex = artifactInfo.indexOf(distanceText);
@@ -414,6 +414,7 @@
 		if (distance === 0) return;
 
 		await goto(urlZona);
+		doc = getFrame().contentDocument;
 
 		const hpPercent = Number(doc.querySelectorAll('#top .rblock.blue.esmall')[1]
 			.querySelector('td:last-child .value-block.lh1').textContent.slice(0, -1));
