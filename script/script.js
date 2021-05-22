@@ -56,9 +56,10 @@
 					<input type='button' id='run' value='Старт'>
 					<input type='button' id='stop' value='Остановить' style='display: none'>
 				</label>
+				<span style="margin-left: 10px"></span>
 				<input type='button' id='daily' value='Daily'>
+				<span style="margin-left: 10px"></span>
 				<input type='button' id='artifact' value='Search artifact'>
-				<input type='button' id='cache' value='Search cache'>
 			</div>
 		`);
 
@@ -79,13 +80,14 @@
 		});
 
 		document.querySelector('#daily').addEventListener('click', async function() {
-			await daily();
+		    await walk(5);
+		    await walk(1);
+		    await walk(4);
+		    await walk(8);
+			// await daily();
 		});
 		document.querySelector('#artifact').addEventListener('click', async function() {
 			await searchArtifact(true);
-		});
-		document.querySelector('#cache').addEventListener('click', async function() {
-			await searchCache(true);
 		});
 
 		await goto(urlZona);
@@ -378,6 +380,10 @@
 		await walk(1);
 	}
 
+	function currentNameLoc() {
+	    return getFrame().contentDocument.querySelector('#main .name').innerHTML;
+    }
+
 	async function walk(route) {
 		const hp = getHp();
 		if (hp === '0') {
@@ -385,7 +391,12 @@
 			await awaitSec(2);
 			await walk(route);
 		} else {
+            const currentName = currentNameLoc();
 			await goto(`${ urlZona }?${typeof route === 'number' ? '' : 'd'}go=${ route }&go_key=${ goKey }`);
+            if (currentName === currentNameLoc()) {
+                await awaitSec(2);
+                await walk(route);
+            }
 		}
 	}
 
