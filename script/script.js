@@ -266,6 +266,44 @@
 		})
 	}
 
+	async function murderMutantsCount(count) {
+		return new Promise(async function(resolve) {
+            const hp = getHp();
+
+            if (hp === '0') {
+                await goto(`${ urlZona }?&apt=use`);
+            }
+
+			await goto(urlZona);
+			let doc = getFrame().contentDocument;
+			// Нож
+            const mutantsKnife = doc.querySelectorAll('#mutants img[title="Нож"]');
+            if (mutantsKnife.length > 0) {
+                await goto(urlZona + mutantsKnife[mutantsKnife.length - 1].parentNode.getAttribute('href'), false);
+                doc = getFrame().contentDocument;
+                if (doc.querySelector('.r4 center.gold')) {
+                    count--;
+                }
+            }
+
+            // Пистолет
+			const mutants = doc.querySelectorAll('#mutants img[title="Пистолет"]');
+			if (mutants.length > 0) {
+				await goto(urlZona + mutants[mutants.length - 1].parentNode.getAttribute('href'), false);
+                doc = getFrame().contentDocument;
+                if (doc.querySelector('.r4 center.gold')) {
+                    count--;
+                }
+			}
+
+			if (count > 0) {
+			    await awaitSec(2);
+			    await murderMutantsCount(count);
+            }
+			resolve(true);
+		})
+	}
+
 	function goto(url, isAwaitSec = true, isStronglav) {
 		return new Promise(async (resolve) => {
 			async function a() {
@@ -301,6 +339,7 @@
 
 	async function daily() {
 		await searchSwagPripyat(); // Поиск хабара в Припяти
+        await questZulus(); // Квест Зулуса
 		await transitionFromPripyatToJupiter(); // Переход на Юпитер
 		await searchSwagJupiter(); // Поиск хабара на Юпитере
 		await transitionFromJupiterToBackwater(); // Переход на Затон
@@ -473,6 +512,47 @@
 		await walk(1);
 		await walk(1);
 	}
+
+	async function questZulus() {
+        await walk(1);
+        await walk(1);
+        await walk(4);
+        await goto('https://sta1kers.ru/npc/a_npc.php?mod=daily');
+        await murderMutantsCount(5);
+        await goto('https://sta1kers.ru/npc/a_npc.php?quest=709');
+        await walk(5);
+        await walk(8);
+        await walk(8);
+        await goto('https://sta1kers.ru/npc/rogovec.php?quest=710');
+        await walk(1);
+        await walk(1);
+        await progressClick('https://sta1kers.ru/zona.php?task=true&quest=1629916', 'a[href="?task=true&quest=1629916"]');
+        await murderMutantsCount(5);
+        await walk(8);
+        await walk(8);
+        await goto('https://sta1kers.ru/npc/rogovec.php?quest=721');
+        await walk(1);
+        await walk(1);
+        await progressClick('https://sta1kers.ru/zona.php?task=true&quest=1629916', 'a[href="?task=true&quest=1629916"]');
+        await walk(8);
+        await walk(8);
+        await goto('https://sta1kers.ru/npc/rogovec.php?quest=727');
+        await walk('s');
+        await goto('https://sta1kers.ru/npc/a_npc.php?quest=728');
+        await walk('c');
+        await walk(1);
+        await walk(1);
+        await walk(4);
+        await goto('https://sta1kers.ru/npc/a_npc.php?quest=729');
+    }
+
+    async function progressClick(link, selector, timer = 5) {
+        await goto(link);
+        if (getFrame().contentDocument.querySelector(selector)) {
+            await awaitSec(timer);
+            await progressClick(link, selector, timer);
+        }
+    }
 
 	function getCurrentNameLoc() {
 	    return getFrame().contentDocument.querySelector('#main .name').innerText;
