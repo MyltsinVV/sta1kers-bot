@@ -159,8 +159,7 @@
 		});
 
 		document.querySelector('#daily').addEventListener('click', async function() {
-		    await walk(8);
-			// await daily();
+			await daily();
 		});
 		document.querySelector('#artifact').addEventListener('click', async function() {
 			await searchArtifact(true);
