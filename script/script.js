@@ -168,23 +168,30 @@
 		});
 	}
 
-	async function murderMutants(dungeon) {
+	async function murderMutants() {
 		return new Promise(async function(resolve) {
-			await goto(dungeon ? urlDungeon : urlZona);
-			const doc = getFrame().contentDocument;
+			await goto(urlZona);
+			let doc = getFrame().contentDocument;
+			// Нож
+            const mutantsKnife = doc.querySelectorAll('#mutants img[title="Нож"]');
+            if (mutantsKnife.length > 0) {
+                await goto(urlZona + mutantsKnife[mutantsKnife.length - 1].parentNode.getAttribute('href'), false);
+                doc = getFrame().contentDocument;
+            }
+            // Пистолет
 			const mutants = doc.querySelectorAll('#mutants img[title="Пистолет"]');
 			if (mutants.length > 0) {
-				await goto((dungeon ? urlDungeon : urlZona) + mutants[mutants.length - 1].parentNode.getAttribute('href'));
+				await goto(urlZona + mutants[mutants.length - 1].parentNode.getAttribute('href'), false);
 			}
 			resolve(true);
 		})
 	}
 
-	function goto(url) {
+	function goto(url, isAwaitSec = true) {
 		return new Promise(resolve => {
 			async function a() {
 				getFrame().removeEventListener('load', a);
-				await awaitSec(0.5);
+                isAwaitSec && await awaitSec(0.5);
 				resolve(true);
 			}
 			getFrame().addEventListener('load', a);
