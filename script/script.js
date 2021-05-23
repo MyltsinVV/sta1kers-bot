@@ -451,14 +451,7 @@
 			indicator = 'red';
 		}
 
-		console.log('hpPercent: ', hpPercent);
-		console.log('Расстояние: ', distance);
-		console.log('Болты: ', countBolt);
-		console.log('Макс. заряд: ', countMaxCharge);
-		console.log('Индекатор: ', indicator);
-
 		if (countBolt >= distance) {
-			console.log('countBolt >= distance');
 			await goto(`${ urlZona }?mod=bolt_search`);
 			await goto(`${ urlZona }?mod=step_search`);
 			await searchArtifact();
@@ -466,7 +459,6 @@
 		}
 
 		if (indicator === 'red' && countBolt > 0) {
-			console.log('indicator === \'red\' && countBolt > 0');
 			await goto(`${ urlZona }?mod=bolt_search`);
 			await goto(`${ urlZona }?mod=step_search`);
 			await searchArtifact();
@@ -474,37 +466,31 @@
 		}
 
 		if (indicator === 'yellow' && hpPercent > 72) {
-			console.log('indicator === \'yellow\' && hpPercent > 72');
 			await goto(`${ urlZona }?mod=step_search`);
 			await searchArtifact();
 			return;
 		}
 
 		if (indicator === 'yellow' && countMaxCharge <= 8 && countBolt > 0) {
-			console.log('indicator === \'yellow\' && countMaxCharge <= 8 && countBolt > 0');
 			await goto(`${ urlZona }?mod=bolt_search`);
 			await goto(`${ urlZona }?mod=step_search`);
 			await searchArtifact();
 		}
 
 		if (indicator === 'green' && hpPercent > 24) {
-			console.log('indicator === \'green\' && hpPercent > 24');
 			await goto(`${ urlZona }?mod=step_search`);
 			await searchArtifact();
 			return;
 		}
 
 		if (hpPercent > countMaxCharge * 12) {
-			console.log('hpPercent > countMaxCharge * 12');
 			await goto(`${ urlZona }?mod=step_search`);
 			await searchArtifact();
 		} else {
 			if (indicator === 'red' && countMaxCharge === 9) {
-				console.log('indicator === \'red\' && countMaxCharge === 9');
 				await searchArtifact(false, true);
 				return;
 			}
-			console.log('apt=use');
 			await goto(`${ urlZona }?&apt=use`);
 			await awaitSec(2);
 			await searchArtifact();
