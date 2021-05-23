@@ -526,24 +526,28 @@
 		await goto('https://sta1kers.ru/npc/rogovec.php?quest=710');
 		await walk(1);
 		await walk(1);
-		await progressClick('https://sta1kers.ru/zona.php?task=true&quest=1629916', 'a[href="?task=true&quest=1629916"]');
+		await progressClick();
 		await murderMutantsCount(5);
 		await walk(8);
 		await walk(8);
 		await goto('https://sta1kers.ru/npc/rogovec.php?quest=721');
 		await walk(1);
 		await walk(1);
-		await progressClick('https://sta1kers.ru/zona.php?task=true&quest=1629916', 'a[href="?task=true&quest=1629916"]');
+		await progressClick();
 		await walk(8);
 		await walk(8);
 		await goto('https://sta1kers.ru/npc/rogovec.php?quest=727');
 		await walk('s');
+		await goto('https://sta1kers.ru/npc/a_npc.php?npc_id=82');
 		await goto('https://sta1kers.ru/npc/a_npc.php?quest=728');
 		await walk('c');
 		await walk(1);
 		await walk(1);
 		await walk(4);
 		await goto('https://sta1kers.ru/npc/a_npc.php?quest=729');
+		await walk(5);
+		await walk(8);
+		await walk(8);
 	}
 
 	async function questTarasov() {
@@ -559,11 +563,12 @@
 		// await goto('https://sta1kers.ru/npc/tarasov.php?quest=663');
 	}
 
-	async function progressClick(link, selector, timer = 5) {
-		await goto(link);
-		if (getFrame().contentDocument.querySelector(selector)) {
-			await awaitSec(timer);
-			await progressClick(link, selector, timer);
+	async function progressClick() {
+		const link = getFrame().contentDocument.querySelector('img[src="../img/ico/link.png"]');
+		if (link) {
+			await goto(urlZona + link.parentNode.getAttribute('href'));
+			await awaitSec(5);
+			await progressClick();
 		}
 	}
 
