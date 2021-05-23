@@ -1,4 +1,4 @@
-(function(){
+(function() {
 	const urlZona = 'https://sta1kers.ru/zona.php';
 	const urlDungeon = 'https://sta1kers.ru/dungeon/';
 
@@ -12,83 +12,83 @@
 	let goKey;
 
 	const locationsPripyat = [
-        {
-            name: 'Колесо обозрения',
-            path: [1, 4, 4, 4],
-        },
-        {
-            name: 'Старый КБО',
-            path: [1, 4, 4],
-        },
-        {
-            name: 'Кинотеатр «Прометей»',
-            path: [1, 4],
-        },
-        {
-            name: '«Лоза»',
-            path: [1],
-        },
-        {
-            name: 'Речной порт',
-            path: [1, 5],
-        },
-        {
-            name: 'Стадион «Авангард»',
-            path: [4, 4, 4],
-        },
-        {
-            name: 'Гостиница «Полесье»',
-            path: [4, 4],
-        },
-        {
-            name: 'КБО «Юбилейный»',
-            path: [4],
-        },
-        {
-            name: 'Школа',
-            path: [],
-        },
-        {
-            name: 'Госпиталь',
-            path: [5],
-        },
-        {
-            name: 'ДК «Энергетик»',
-            path: [8, 4, 4, 4],
-        },
-        {
-            name: 'Подземная автостоянка',
-            path: [8, 4, 4],
-        },
-        {
-            name: '«Вулкан»',
-            path: [8, 4],
-        },
-        {
-            name: 'Детский сад',
-            path: [8],
-        },
-        {
-            name: 'Магазин «Берёзка»',
-            path: [8, 5],
-        },
-        {
-            name: 'Гастроном',
-            path: [8, 8, 4, 4, 4],
-        },
-        {
-            name: 'Магазин «Книги»',
-            path: [8, 8, 4, 4],
-        },
-        {
-            name: 'Универмаг',
-            path: [8, 8, 4],
-        },
-        {
-            name: 'Общежитие',
-            path: [8, 8],
-        }
-    ];
+		{
+			name: 'Колесо обозрения',
+			path: [1, 4, 4, 4],
+		},
+		{
+			name: 'Старый КБО',
+			path: [1, 4, 4],
+		},
+		{
+			name: 'Кинотеатр «Прометей»',
+			path: [1, 4],
+		},
+		{
+			name: '«Лоза»',
+			path: [1],
+		},
+		{
+			name: 'Речной порт',
+			path: [1, 5],
+		},
+		{
+			name: 'Стадион «Авангард»',
+			path: [4, 4, 4],
+		},
+		{
+			name: 'Гостиница «Полесье»',
+			path: [4, 4],
+		},
+		{
+			name: 'КБО «Юбилейный»',
+			path: [4],
+		},
+		{
+			name: 'Школа',
+			path: [],
+		},
+		{
+			name: 'Госпиталь',
+			path: [5],
+		},
+		{
+			name: 'ДК «Энергетик»',
+			path: [8, 4, 4, 4],
+		},
+		{
+			name: 'Подземная автостоянка',
+			path: [8, 4, 4],
+		},
+		{
+			name: '«Вулкан»',
+			path: [8, 4],
+		},
+		{
+			name: 'Детский сад',
+			path: [8],
+		},
+		{
+			name: 'Магазин «Берёзка»',
+			path: [8, 5],
+		},
+		{
+			name: 'Гастроном',
+			path: [8, 8, 4, 4, 4],
+		},
+		{
+			name: 'Магазин «Книги»',
+			path: [8, 8, 4, 4],
+		},
+		{
+			name: 'Универмаг',
+			path: [8, 8, 4],
+		},
+		{
+			name: 'Общежитие',
+			path: [8, 8],
+		},
+	];
 
 	setTimeout(bot, 100);
 
@@ -114,33 +114,33 @@
 		let l = document.location.toString();
 		l = l.replace(/#.*$/, '');
 		jQuery('body').html(`
-			<iframe
-				id="testbot"
-				src='${l}' 
-				style='z-index: 100; position: fixed; top: 26px; height: calc(100% - 26px); width: 100%; left: 0; border: unset;'
-			>
-			</iframe>
-			<span></span>	
-			<div>
-				<style>
-					input[type="checkbox"]{
-						display: inline-block !important;
-					};
-					a *{
-						position: static !important;
-					}
-				</style>
-				<label for="run">
-					Мобы + арена
-					<input type='button' id='run' value='Старт'>
-					<input type='button' id='stop' value='Остановить' style='display: none'>
-				</label>
-				<span style="margin-left: 10px"></span>
-				<input type='button' id='daily' value='Daily'>
-				<span style="margin-left: 10px"></span>
-				<input type='button' id='artifact' value='Search artifact'>
-			</div>
-		`);
+                <iframe
+                    id="testbot"
+                    src='${ l }' 
+                    style='z-index: 100; position: fixed; top: 26px; height: calc(100% - 26px); width: 100%; left: 0; border: unset;'
+                >
+                </iframe>
+                <span></span>	
+                <div>
+                    <style>
+                        input[type="checkbox"]{
+                            display: inline-block !important;
+                        };
+                        a *{
+                            position: static !important;
+                        }
+                    </style>
+                    <label for="run">
+                        Мобы + арена
+                        <input type='button' id='run' value='Старт'>
+                        <input type='button' id='stop' value='Остановить' style='display: none'>
+                    </label>
+                    <span style="margin-left: 10px"></span>
+                    <input type='button' id='daily' value='Daily'>
+                    <span style="margin-left: 10px"></span>
+                    <input type='button' id='artifact' value='Search artifact'>
+                </div>
+            `);
 
 		jQuery('#run').click(function() {
 			jQuery(this).hide();
@@ -166,9 +166,7 @@
 		});
 
 		await goto(urlZona);
-		goKey = getFrame().contentDocument
-			.querySelector('#location .linkw > a.linkw')?.getAttribute('href')
-			.split('&')[1].split('=')[1];
+		goKey = getFrame().contentDocument.querySelector('#location .linkw > a.linkw')?.getAttribute('href').split('&')[1].split('=')[1];
 	}
 
 	function getFrame() {
@@ -178,7 +176,7 @@
 	async function go() {
 		farmArr = [
 			'arena',
-			'farm'
+			'farm',
 		];
 		await series();
 	}
@@ -252,81 +250,82 @@
 			await goto(urlZona);
 			let doc = getFrame().contentDocument;
 			// Нож
-            const mutantsKnife = doc.querySelectorAll('#mutants img[title="Нож"]');
-            if (mutantsKnife.length > 0) {
-                await goto(urlZona + mutantsKnife[mutantsKnife.length - 1].parentNode.getAttribute('href'), false);
-                doc = getFrame().contentDocument;
-            }
-            // Пистолет
+			const mutantsKnife = doc.querySelectorAll('#mutants img[title="Нож"]');
+			if (mutantsKnife.length > 0) {
+				await goto(urlZona + mutantsKnife[mutantsKnife.length - 1].parentNode.getAttribute('href'), false);
+				doc = getFrame().contentDocument;
+			}
+			// Пистолет
 			const mutants = doc.querySelectorAll('#mutants img[title="Пистолет"]');
 			if (mutants.length > 0) {
 				await goto(urlZona + mutants[mutants.length - 1].parentNode.getAttribute('href'), false);
 			}
 			resolve(true);
-		})
+		});
 	}
 
 	async function murderMutantsCount(count) {
 		return new Promise(async function(resolve) {
-            const hp = getHp();
+			const hp = getHp();
 
-            if (hp === '0') {
-                await goto(`${ urlZona }?&apt=use`);
-            }
+			if (hp === '0') {
+				await goto(`${ urlZona }?&apt=use`);
+			}
 
 			await goto(urlZona);
 			let doc = getFrame().contentDocument;
 			// Нож
-            const mutantsKnife = doc.querySelectorAll('#mutants img[title="Нож"]');
-            if (mutantsKnife.length > 0) {
-                await goto(urlZona + mutantsKnife[mutantsKnife.length - 1].parentNode.getAttribute('href'), false);
-                doc = getFrame().contentDocument;
-                if (doc.querySelector('.r4 center.gold')) {
-                    count--;
-                }
-            }
+			const mutantsKnife = doc.querySelectorAll('#mutants img[title="Нож"]');
+			if (mutantsKnife.length > 0) {
+				await goto(urlZona + mutantsKnife[mutantsKnife.length - 1].parentNode.getAttribute('href'), false);
+				doc = getFrame().contentDocument;
+				if (doc.querySelector('.r4 center.gold')) {
+					count--;
+				}
+			}
 
-            // Пистолет
+			// Пистолет
 			const mutants = doc.querySelectorAll('#mutants img[title="Пистолет"]');
 			if (mutants.length > 0) {
 				await goto(urlZona + mutants[mutants.length - 1].parentNode.getAttribute('href'), false);
-                doc = getFrame().contentDocument;
-                if (doc.querySelector('.r4 center.gold')) {
-                    count--;
-                }
+				doc = getFrame().contentDocument;
+				if (doc.querySelector('.r4 center.gold')) {
+					count--;
+				}
 			}
 
 			if (count > 0) {
-			    await awaitSec(2);
-			    await murderMutantsCount(count);
-            }
+				await awaitSec(2);
+				await murderMutantsCount(count);
+			}
 			resolve(true);
-		})
+		});
 	}
 
 	function goto(url, isAwaitSec = true, isStronglav) {
-		return new Promise(async (resolve) => {
+		return new Promise(async(resolve) => {
 			async function a() {
 				getFrame().removeEventListener('load', a);
-                isAwaitSec && await awaitSec(0.5);
+				isAwaitSec && await awaitSec(0.5);
 				resolve(true);
 			}
-            if (!isStronglav && getFrame().contentDocument.querySelector('img[alt="Стронглав"]')) {
-                const locName = getCurrentNameLoc();
-                // Выход из логова на школу
-                await goto(urlZona, true, true);
-                await walk(1);
-                // Идём на место откуда утащил нас стронглав
-                const path = locationsPripyat.filter(item => item.name === locName)[0].path;
-                for (const pathElement of path) {
-                    await walk(pathElement);
-                }
-            }
+
+			if (!isStronglav && getFrame().contentDocument.querySelector('img[alt="Стронглав"]')) {
+				const locName = getCurrentNameLoc();
+				// Выход из логова на школу
+				await goto(urlZona, true, true);
+				await walk(1);
+				// Идём на место откуда утащил нас стронглав
+				const path = locationsPripyat.filter(item => item.name === locName)[0].path;
+				for (const pathElement of path) {
+					await walk(pathElement);
+				}
+			}
 
 			getFrame().addEventListener('load', a);
 
 			getFrame().setAttribute('src', url);
-		})
+		});
 	}
 
 	async function searchSwag() {
@@ -339,7 +338,8 @@
 
 	async function daily() {
 		await searchSwagPripyat(); // Поиск хабара в Припяти
-        await questZulus(); // Квест Зулуса
+		await questZulus(); // Квест Зулуса
+		// await questTarasov(); // Квест Тарасова
 		await transitionFromPripyatToJupiter(); // Переход на Юпитер
 		await searchSwagJupiter(); // Поиск хабара на Юпитере
 		await transitionFromJupiterToBackwater(); // Переход на Затон
@@ -514,49 +514,62 @@
 	}
 
 	async function questZulus() {
-        await walk(1);
-        await walk(1);
-        await walk(4);
-        await goto('https://sta1kers.ru/npc/a_npc.php?mod=daily');
-        await murderMutantsCount(5);
-        await goto('https://sta1kers.ru/npc/a_npc.php?quest=709');
-        await walk(5);
-        await walk(8);
-        await walk(8);
-        await goto('https://sta1kers.ru/npc/rogovec.php?quest=710');
-        await walk(1);
-        await walk(1);
-        await progressClick('https://sta1kers.ru/zona.php?task=true&quest=1629916', 'a[href="?task=true&quest=1629916"]');
-        await murderMutantsCount(5);
-        await walk(8);
-        await walk(8);
-        await goto('https://sta1kers.ru/npc/rogovec.php?quest=721');
-        await walk(1);
-        await walk(1);
-        await progressClick('https://sta1kers.ru/zona.php?task=true&quest=1629916', 'a[href="?task=true&quest=1629916"]');
-        await walk(8);
-        await walk(8);
-        await goto('https://sta1kers.ru/npc/rogovec.php?quest=727');
-        await walk('s');
-        await goto('https://sta1kers.ru/npc/a_npc.php?quest=728');
-        await walk('c');
-        await walk(1);
-        await walk(1);
-        await walk(4);
-        await goto('https://sta1kers.ru/npc/a_npc.php?quest=729');
-    }
+		await walk(1);
+		await walk(1);
+		await walk(4);
+		await goto('https://sta1kers.ru/npc/a_npc.php?mod=daily');
+		await murderMutantsCount(5);
+		await goto('https://sta1kers.ru/npc/a_npc.php?quest=709');
+		await walk(5);
+		await walk(8);
+		await walk(8);
+		await goto('https://sta1kers.ru/npc/rogovec.php?quest=710');
+		await walk(1);
+		await walk(1);
+		await progressClick('https://sta1kers.ru/zona.php?task=true&quest=1629916', 'a[href="?task=true&quest=1629916"]');
+		await murderMutantsCount(5);
+		await walk(8);
+		await walk(8);
+		await goto('https://sta1kers.ru/npc/rogovec.php?quest=721');
+		await walk(1);
+		await walk(1);
+		await progressClick('https://sta1kers.ru/zona.php?task=true&quest=1629916', 'a[href="?task=true&quest=1629916"]');
+		await walk(8);
+		await walk(8);
+		await goto('https://sta1kers.ru/npc/rogovec.php?quest=727');
+		await walk('s');
+		await goto('https://sta1kers.ru/npc/a_npc.php?quest=728');
+		await walk('c');
+		await walk(1);
+		await walk(1);
+		await walk(4);
+		await goto('https://sta1kers.ru/npc/a_npc.php?quest=729');
+	}
 
-    async function progressClick(link, selector, timer = 5) {
-        await goto(link);
-        if (getFrame().contentDocument.querySelector(selector)) {
-            await awaitSec(timer);
-            await progressClick(link, selector, timer);
-        }
-    }
+	async function questTarasov() {
+		// await goto('https://sta1kers.ru/npc/tarasov.php?mod=daily');
+		// await goto('https://sta1kers.ru/npc/tarasov.php?quest=661');
+		// await walk(1);
+		// await walk(1);
+		// await walk('e');
+		// Убийство проповедника
+		// await walk('c');
+		// await walk(8);
+		// await walk(8);
+		// await goto('https://sta1kers.ru/npc/tarasov.php?quest=663');
+	}
+
+	async function progressClick(link, selector, timer = 5) {
+		await goto(link);
+		if (getFrame().contentDocument.querySelector(selector)) {
+			await awaitSec(timer);
+			await progressClick(link, selector, timer);
+		}
+	}
 
 	function getCurrentNameLoc() {
-	    return getFrame().contentDocument.querySelector('#main .name').innerText;
-    }
+		return getFrame().contentDocument.querySelector('#main .name').innerText;
+	}
 
 	async function walk(route) {
 		const hp = getHp();
@@ -565,12 +578,12 @@
 			await awaitSec(2);
 			await walk(route);
 		} else {
-            const currentName = getCurrentNameLoc();
-			await goto(`${ urlZona }?${typeof route === 'number' ? '' : 'd'}go=${ route }&go_key=${ goKey }`);
-            if (currentName === getCurrentNameLoc()) {
-                await awaitSec(2);
-                await walk(route);
-            }
+			const currentName = getCurrentNameLoc();
+			await goto(`${ urlZona }?${ typeof route === 'number' ? '' : 'd' }go=${ route }&go_key=${ goKey }`);
+			if (currentName === getCurrentNameLoc()) {
+				await awaitSec(2);
+				await walk(route);
+			}
 		}
 	}
 
@@ -578,32 +591,32 @@
 		return new Promise(resolve => {
 			setTimeout(function() {
 				resolve(true);
-			}, sec * 1000)
-		})
+			}, sec * 1000);
+		});
 	}
 
 	async function searchArtifact(start, newSearch) {
-        if (getHp() === '0') {
-            await goto(`${ urlZona }?&apt=use`);
-            await awaitSec(2);
-            await searchArtifact(true);
-            return;
-        }
+		if (getHp() === '0') {
+			await goto(`${ urlZona }?&apt=use`);
+			await awaitSec(2);
+			await searchArtifact(true);
+			return;
+		}
 		if (start) {
 			await goto(`${ urlZona }?mod=start_search`);
 			await awaitSec(30);
 			await goto(urlZona);
 		}
 		if (newSearch) {
-            if (getCurrentNameLoc().includes('Север')) {
-                await walk('c');
-                await walk('n');
-            } else {
-                await walk('n');
-                await walk('c');
-            }
+			if (getCurrentNameLoc().includes('Север')) {
+				await walk('c');
+				await walk('n');
+			} else {
+				await walk('n');
+				await walk('c');
+			}
 			await searchArtifact(true);
-            return;
+			return;
 		}
 
 		let doc = getFrame().contentDocument;
@@ -617,8 +630,7 @@
 		await goto(urlZona);
 		doc = getFrame().contentDocument;
 
-		const hpPercent = Number(doc.querySelectorAll('#top .rblock.blue.esmall')[1]
-			.querySelector('td:last-child .value-block.lh1').textContent.slice(0, -1));
+		const hpPercent = Number(doc.querySelectorAll('#top .rblock.blue.esmall')[1].querySelector('td:last-child .value-block.lh1').textContent.slice(0, -1));
 		const boltText = 'Болты: ';
 		const boltIndex = artifactInfo.indexOf(boltText);
 		const countBolt = Number(artifactInfo.slice(boltIndex + boltText.length, boltIndex + boltText.length + 1));
@@ -689,7 +701,7 @@
 
 		const doc = getFrame().contentDocument;
 		if (doc.querySelector('img[title="1-й тип"]')) {
-			await searchCache1({})
+			await searchCache1({});
 		} else if (doc.querySelector('img[title="2-й тип"]')) {
 			console.log(2);
 		} else if (doc.querySelector('img[title="3-й тип"]')) {
@@ -697,7 +709,7 @@
 		}
 	}
 
-	async function searchCache1({ correctAnswer = [], depth = 1 }) {
+	async function searchCache1({correctAnswer = [], depth = 1}) {
 		if (depth === 6) return;
 
 		if (correctAnswer[depth - 1]) {
@@ -707,19 +719,19 @@
 				await goto(`${ urlZona }?mod=left_search`);
 			}
 			depth++;
-			await searchCache1({ correctAnswer, depth });
+			await searchCache1({correctAnswer, depth});
 		} else {
 			await goto(`${ urlZona }?mod=left_search`);
 			const doc = getFrame().contentDocument;
 			const error = doc.querySelector('.r6.stalker_link.error')?.innerText;
 			if (error) {
 				correctAnswer.push('r');
-				await searchCache1({ correctAnswer });
+				await searchCache1({correctAnswer});
 			} else {
 				correctAnswer.push('l');
 				depth++;
-				await searchCache1({ correctAnswer, depth });
+				await searchCache1({correctAnswer, depth});
 			}
 		}
 	}
-})()
+})();
