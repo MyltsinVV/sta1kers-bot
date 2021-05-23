@@ -11,6 +11,85 @@
 
 	let goKey;
 
+	const locationsPripyat = [
+        {
+            name: 'Колесо обозрения',
+            path: [1, 4, 4, 4],
+        },
+        {
+            name: 'Старый КБО',
+            path: [1, 4, 4],
+        },
+        {
+            name: 'Кинотеатр «Прометей»',
+            path: [1, 4],
+        },
+        {
+            name: '«Лоза»',
+            path: [1],
+        },
+        {
+            name: 'Речной порт',
+            path: [1, 5],
+        },
+        {
+            name: 'Стадион «Авангард»',
+            path: [4, 4, 4],
+        },
+        {
+            name: 'Гостиница «Полесье»',
+            path: [4, 4],
+        },
+        {
+            name: 'КБО «Юбилейный»',
+            path: [4],
+        },
+        {
+            name: 'Школа',
+            path: [],
+        },
+        {
+            name: 'Госпиталь',
+            path: [5],
+        },
+        {
+            name: 'ДК «Энергетик»',
+            path: [8, 4, 4, 4],
+        },
+        {
+            name: 'Подземная автостоянка',
+            path: [8, 4, 4],
+        },
+        {
+            name: '«Вулкан»',
+            path: [8, 4],
+        },
+        {
+            name: 'Детский сад',
+            path: [8],
+        },
+        {
+            name: 'Магазин «Берёзка»',
+            path: [8, 5],
+        },
+        {
+            name: 'Гастроном',
+            path: [8, 8, 4, 4, 4],
+        },
+        {
+            name: 'Магазин «Книги»',
+            path: [8, 8, 4, 4],
+        },
+        {
+            name: 'Универмаг',
+            path: [8, 8, 4],
+        },
+        {
+            name: 'Общежитие',
+            path: [8, 8],
+        }
+    ];
+
 	setTimeout(bot, 100);
 
 	async function bot() {
@@ -80,7 +159,8 @@
 		});
 
 		document.querySelector('#daily').addEventListener('click', async function() {
-			await daily();
+		    await walk(8);
+			// await daily();
 		});
 		document.querySelector('#artifact').addEventListener('click', async function() {
 			await searchArtifact(true);
@@ -187,13 +267,25 @@
 		})
 	}
 
-	function goto(url, isAwaitSec = true) {
-		return new Promise(resolve => {
+	function goto(url, isAwaitSec = true, isStronglav) {
+		return new Promise(async (resolve) => {
 			async function a() {
 				getFrame().removeEventListener('load', a);
                 isAwaitSec && await awaitSec(0.5);
 				resolve(true);
 			}
+            if (!isStronglav && getFrame().contentDocument.querySelector('img[alt="Стронглав"]')) {
+                const locName = getCurrentNameLoc();
+                // Выход из логова на школу
+                await goto(urlZona, true, true);
+                await walk(1);
+                // Идём на место откуда утащил нас стронглав
+                const path = locationsPripyat.filter(item => item.name === locName)[0].path;
+                for (const pathElement of path) {
+                    await walk(pathElement);
+                }
+            }
+
 			getFrame().addEventListener('load', a);
 
 			getFrame().setAttribute('src', url);
@@ -383,8 +475,8 @@
 		await walk(1);
 	}
 
-	function currentNameLoc() {
-	    return getFrame().contentDocument.querySelector('#main .name').innerHTML;
+	function getCurrentNameLoc() {
+	    return getFrame().contentDocument.querySelector('#main .name').innerText;
     }
 
 	async function walk(route) {
@@ -394,9 +486,9 @@
 			await awaitSec(2);
 			await walk(route);
 		} else {
-            const currentName = currentNameLoc();
+            const currentName = getCurrentNameLoc();
 			await goto(`${ urlZona }?${typeof route === 'number' ? '' : 'd'}go=${ route }&go_key=${ goKey }`);
-            if (currentName === currentNameLoc()) {
+            if (currentName === getCurrentNameLoc()) {
                 await awaitSec(2);
                 await walk(route);
             }
@@ -412,15 +504,27 @@
 	}
 
 	async function searchArtifact(start, newSearch) {
+        if (getHp() === '0') {
+            await goto(`${ urlZona }?&apt=use`);
+            await awaitSec(2);
+            await searchArtifact(true);
+            return;
+        }
 		if (start) {
 			await goto(`${ urlZona }?mod=start_search`);
 			await awaitSec(30);
 			await goto(urlZona);
 		}
 		if (newSearch) {
-			await goto(`${ urlZona }?mod=new_search`);
-			await awaitSec(30);
-			await goto(urlZona);
+            if (getCurrentNameLoc().includes('Север')) {
+                await walk('c');
+                await walk('n');
+            } else {
+                await walk('n');
+                await walk('c');
+            }
+			await searchArtifact(true);
+            return;
 		}
 
 		let doc = getFrame().contentDocument;
