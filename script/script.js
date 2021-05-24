@@ -339,12 +339,14 @@
 	async function daily() {
 		await searchSwagPripyat(); // Поиск хабара в Припяти
 		await questZulus(); // Квест Зулуса
-		// await questTarasov(); // Квест Тарасова
+		// Взять квест Стрелка
 		await transitionFromPripyatToJupiter(); // Переход на Юпитер
 		await searchSwagJupiter(); // Поиск хабара на Юпитере
+		// Выполнить квест Стрелка
 		await transitionFromJupiterToBackwater(); // Переход на Затон
 		await searchSwagBackwater(); // Поиск хабара на Затоне
 		await searchSwagDone(); // Сдача хабара Вобле
+		// Сдать квест Стрелка
 	}
 
 	async function transitionFromPripyatToJupiter() {
@@ -548,19 +550,6 @@
 		await walk(5);
 		await walk(8);
 		await walk(8);
-	}
-
-	async function questTarasov() {
-		// await goto('https://sta1kers.ru/npc/tarasov.php?mod=daily');
-		// await goto('https://sta1kers.ru/npc/tarasov.php?quest=661');
-		// await walk(1);
-		// await walk(1);
-		// await walk('e');
-		// Убийство проповедника
-		// await walk('c');
-		// await walk(8);
-		// await walk(8);
-		// await goto('https://sta1kers.ru/npc/tarasov.php?quest=663');
 	}
 
 	async function progressClick() {
