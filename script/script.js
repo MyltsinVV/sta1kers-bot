@@ -685,47 +685,4 @@
 			await searchArtifact();
 		}
 	}
-
-	async function searchCache(start) {
-		if (start) {
-			await goto(`${ urlZona }?mod=start_search`);
-			await awaitSec(30);
-			await goto(urlZona);
-		}
-
-		const doc = getFrame().contentDocument;
-		if (doc.querySelector('img[title="1-й тип"]')) {
-			await searchCache1({});
-		} else if (doc.querySelector('img[title="2-й тип"]')) {
-			console.log(2);
-		} else if (doc.querySelector('img[title="3-й тип"]')) {
-			console.log(3);
-		}
-	}
-
-	async function searchCache1({correctAnswer = [], depth = 1}) {
-		if (depth === 6) return;
-
-		if (correctAnswer[depth - 1]) {
-			if (correctAnswer[depth - 1] === 'r') {
-				await goto(`${ urlZona }?mo	d=right_search`);
-			} else {
-				await goto(`${ urlZona }?mod=left_search`);
-			}
-			depth++;
-			await searchCache1({correctAnswer, depth});
-		} else {
-			await goto(`${ urlZona }?mod=left_search`);
-			const doc = getFrame().contentDocument;
-			const error = doc.querySelector('.r6.stalker_link.error')?.innerText;
-			if (error) {
-				correctAnswer.push('r');
-				await searchCache1({correctAnswer});
-			} else {
-				correctAnswer.push('l');
-				depth++;
-				await searchCache1({correctAnswer, depth});
-			}
-		}
-	}
 })();
