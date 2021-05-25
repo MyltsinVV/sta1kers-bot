@@ -91,11 +91,125 @@
 
 	const zatonArtifacts = [
 		{
-			name: 'test',
-			pathTo: [1, 2, 3, 'e'],
-			pathBack: [1, 3 , 5, 'c'],
-			artifact: true
-		}
+			name: 'СгоревшийХуторСевер',
+			pathTo: [1, 4, 'n'],
+			pathBack: ['c', 5, 8],
+			isArtifact: true
+		},
+		{
+			name: 'СгоревшийХуторЗапад',
+			pathTo: [1, 4, 'w'],
+			pathBack: ['c', 5, 8],
+			isArtifact: true
+		},
+		{
+			name: 'СгоревшийХуторЮг',
+			pathTo: [1, 4, 's'],
+			pathBack: ['c', 5, 8],
+			isArtifact: true
+		},
+		{
+			name: 'Котёл',
+			pathTo: [1, 5],
+			pathBack: [4, 8],
+			isArtifact: true
+		},
+		{
+			name: 'КотёлСевер',
+			pathTo: [1, 5, 'n'],
+			pathBack: ['c', 4, 8],
+			isArtifact: true
+		},
+		{
+			name: 'КотёлЗапад',
+			pathTo: [1, 5, 'w'],
+			pathBack: ['c', 4, 8],
+			isArtifact: true
+		},
+		{
+			name: 'Топь',
+			pathTo: [4, 4],
+			pathBack: [5, 5],
+			isArtifact: true
+		},
+		{
+			name: 'ТопьСевер',
+			pathTo: [4, 4, 'n'],
+			pathBack: ['c', 5, 5],
+			isArtifact: true
+		},
+		{
+			name: 'ТопьЗапад',
+			pathTo: [4, 4, 'w'],
+			pathBack: ['c', 5, 5],
+			isArtifact: true
+		},
+		{
+			name: 'ТопьЮг',
+			pathTo: [4, 4, 's'],
+			pathBack: ['c', 5, 5],
+			isArtifact: true
+		},
+		{
+			name: 'ЗемснарядСевер',
+			pathTo: [5, 'n'],
+			pathBack: ['c', 4],
+			isArtifact: true
+		},
+		{
+			name: 'ЗемснарядВосток',
+			pathTo: [5, 'e'],
+			pathBack: ['c', 4],
+			isArtifact: true
+		},
+		{
+			name: 'ЗемснарядЮг',
+			pathTo: [5, 's'],
+			pathBack: ['c', 4],
+			isArtifact: true
+		},
+		{
+			name: 'Соснодуб',
+			pathTo: [4, 4, 8, 8],
+			pathBack: [1, 1, 5, 5],
+			isArtifact: true
+		},
+		{
+			name: 'СоснодубСевер',
+			pathTo: [4, 4, 8, 8, 'n'],
+			pathBack: ['c', 1, 1, 5, 5],
+			isArtifact: true
+		},
+		{
+			name: 'СоснодубСевер',
+			pathTo: [4, 4, 8, 8, 'w'],
+			pathBack: ['c', 1, 1, 5, 5],
+			isArtifact: true
+		},
+		{
+			name: 'Коготь',
+			pathTo: [8, 8],
+			pathBack: [5, 5],
+			isArtifact: true
+		},
+		{
+			name: 'КоготьСевер',
+			pathTo: [8, 8, 'n'],
+			pathBack: ['c', 5, 5],
+			isArtifact: true
+		},
+		{
+			name: 'КоготьЗапад',
+			pathTo: [8, 8, 'w'],
+			pathBack: ['c', 5, 5],
+			isArtifact: true
+		},
+		{
+			name: 'КоготьВосток',
+			pathTo: [8, 8, 'e'],
+			pathBack: ['c', 5, 5],
+			isArtifact: true
+		},
 	];
 
 	setTimeout(bot, 100);
@@ -173,8 +287,9 @@
 		});
 		document.querySelector('#artifact').addEventListener('click', async function() {
 			await searchArtifact(true);
-		});document.querySelector('#artifactInfinity').addEventListener('click', async function() {
-			console.log(123);
+		});
+		document.querySelector('#artifactInfinity').addEventListener('click', async function() {
+			await infinityArtifact();
 		});
 
 		await goto(urlZona);
@@ -770,5 +885,29 @@
 			await awaitSec(2);
 			await searchArtifact();
 		}
+	}
+
+	async function infinityArtifact() {
+		const artifact = zatonArtifacts.filter((item) => item.isArtifact)[0];
+		if (!artifact) return;
+
+		for (const route of artifact.pathTo) {
+			await walk(route);
+		}
+
+		const start = getFrame().contentDocument.querySelector('a[href="?mod=start_search"]');
+		if (start) {
+			await searchArtifact(true);
+		} else {
+			artifact.isArtifact = false;
+		}
+
+		for (const route of artifact.pathBack) {
+			await walk(route);
+		}
+
+		setTimeout(async function () {
+			await infinityArtifact();
+		}, 15 * 60 * 1000);
 	}
 })();
