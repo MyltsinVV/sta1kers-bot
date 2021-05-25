@@ -1,6 +1,5 @@
 (function() {
 	const urlZona = 'https://sta1kers.ru/zona.php';
-	const urlDungeon = 'https://sta1kers.ru/dungeon/';
 
 	let farmArr;
 
@@ -339,14 +338,18 @@
 	async function daily() {
 		await searchSwagPripyat(); // Поиск хабара в Припяти
 		await questZulus(); // Квест Зулуса
-		// Взять квест Стрелка
+		await questStrelokStart();// Взять квест Стрелка
 		await transitionFromPripyatToJupiter(); // Переход на Юпитер
 		await searchSwagJupiter(); // Поиск хабара на Юпитере
-		// Выполнить квест Стрелка
+		await questSokolov(); // Квест Соколова
+		await questStrelokProgress(); // Выполнить квест Стрелка
 		await transitionFromJupiterToBackwater(); // Переход на Затон
 		await searchSwagBackwater(); // Поиск хабара на Затоне
 		await searchSwagDone(); // Сдача хабара Вобле
-		// Сдать квест Стрелка
+		await questLisnik(); // Квест Лесника
+		await transitionFromBackwaterToPripyat(); // Переход в Припять
+		await questStrelokCompleted(); // Сдать квест Стрелка
+		await goto(urlZona);
 	}
 
 	async function transitionFromPripyatToJupiter() {
@@ -358,6 +361,13 @@
 	async function transitionFromJupiterToBackwater() {
 		await goto(`https://sta1kers.ru/npc/locman.php?quest=10`);
 		await goto(`https://sta1kers.ru/npc/locman.php?quest=11`);
+		await goto(urlZona);
+	}
+
+	async function transitionFromBackwaterToPripyat() {
+		await goto(`https://sta1kers.ru/npc/locman.php`);
+		await goto(`https://sta1kers.ru/npc/locman.php?quest=348`);
+		await goto(`https://sta1kers.ru/npc/locman.php?quest=349`);
 		await goto(urlZona);
 	}
 
@@ -546,17 +556,80 @@
 		await walk(1);
 		await walk(1);
 		await walk(4);
+		await goto('https://sta1kers.ru/npc/a_npc.php?npc_id=94');
 		await goto('https://sta1kers.ru/npc/a_npc.php?quest=729');
 		await walk(5);
 		await walk(8);
 		await walk(8);
 	}
 
-	async function progressClick() {
+	async function questSokolov() {
+		await walk(8);
+		await goto('https://sta1kers.ru/npc/a_npc.php?npc_id=50');
+		await goto('https://sta1kers.ru/npc/a_npc.php?mod=daily');
+		await walk(4);
+		await murderMutantsCount(5);
+		await walk(5);
+		await goto('https://sta1kers.ru/npc/a_npc.php?npc_id=50');
+		await goto('https://sta1kers.ru/npc/a_npc.php?quest=614');
+		await walk(1);
+	}
+
+	async function questLisnik() {
+		await walk(1);
+		await walk(4);
+		await walk(4);
+		await goto('https://sta1kers.ru/npc/lesnik.php');
+		await goto('https://sta1kers.ru/npc/lesnik.php?mod=daily');
+		await goto('https://sta1kers.ru/npc/lesnik.php?quest=841');
+		await murderMutantsCount(5);
+		await goto('https://sta1kers.ru/zona.php?wd_pass=100&wd_key=RLRLRLRLRL');
+		await goto('https://sta1kers.ru/npc/lesnik.php');
+		await goto('https://sta1kers.ru/npc/lesnik.php?quest=848');
+		await walk(5);
+		await walk(5);
+		await walk(8);
+	}
+
+	async function questStrelokStart() {
+		await goto('https://sta1kers.ru/npc/a_npc.php?npc_id=88');
+		await goto('https://sta1kers.ru/npc/a_npc.php?mod=daily');
+	}
+
+	async function questStrelokProgress() {
+		await walk(4);
+		await walk(8);
+		await walk(8);
+		await walk(8);
+		await progressClick(false);
+		await walk(1);
+		await walk(1);
+		await walk(1);
+		await walk(1);
+		await walk(5);
+		await walk(5);
+		await progressClick(false);
+		await walk(8);
+		await walk(8);
+		await walk(8);
+		await walk(5);
+		await progressClick(false);
+		await walk(1);
+		await walk(1);
+		await walk(4);
+		await walk(4);
+	}
+
+	async function questStrelokCompleted() {
+		await goto('https://sta1kers.ru/npc/a_npc.php?npc_id=88');
+		await goto('https://sta1kers.ru/npc/a_npc.php?quest=607');
+	}
+
+	async function progressClick(isAwaitSec = true) {
 		const link = getFrame().contentDocument.querySelector('img[src="../img/ico/link.png"]');
 		if (link) {
 			await goto(urlZona + link.parentNode.getAttribute('href'));
-			await awaitSec(5);
+			isAwaitSec && await awaitSec(5);
 			await progressClick();
 		}
 	}
