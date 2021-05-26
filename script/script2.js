@@ -815,6 +815,15 @@
 			if (getCurrentNameLoc().includes('Север')) {
 				await walk('c');
 				await walk('n');
+			} else if (getCurrentNameLoc().includes('Запад')) {
+				await walk('c');
+				await walk('w');
+			} else if (getCurrentNameLoc().includes('Юг')) {
+				await walk('c');
+				await walk('s');
+			} else if (getCurrentNameLoc().includes('Восток')) {
+				await walk('c');
+				await walk('e');
 			} else {
 				await walk('n');
 				await walk('c');
