@@ -815,7 +815,9 @@
 		}
 
 		let doc = getFrame().contentDocument;
-		const artifactInfo = doc.querySelector('#artefacts .q2.lal i').innerHTML;
+		const artifactInfo = doc.querySelector('#artefacts .q2.lal i')?.innerHTML;
+		if (!artifactInfo) return;
+
 		const distanceText = 'Расстояние: ';
 		const distanceIndex = artifactInfo.indexOf(distanceText);
 		const distance = Number(artifactInfo.slice(distanceIndex + distanceText.length, distanceIndex + distanceText.length + 2).trim());
