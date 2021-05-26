@@ -257,11 +257,13 @@
 						<input type='button' id='run' value='Старт'>
 						<input type='button' id='stop' value='Стоп' style='display: none'>
 				</label>
-				<span style="margin-left: 10px"></span>
+				<span style="margin-left: 5px"></span>
 				<input type='button' id='daily' value='Daily'>
-				<span style="margin-left: 10px"></span>
+				<span style="margin-left: 5px"></span>
+				<input type='button' id='defence' value='База'>
+				<span style="margin-left: 5px"></span>
 				<input type='button' id='artifact' value='One artifact'>
-				<span style="margin-left: 10px"></span>
+				<span style="margin-left: 5px"></span>
 				<input type='button' id='artifactInfinity' value='Infinity artifacts'>
 				<span id="timer">15:00</span>
 			</div>
@@ -291,6 +293,12 @@
 		});
 		document.querySelector('#artifactInfinity').addEventListener('click', async function() {
 			await infinityArtifact();
+		});
+		document.querySelector('#defence').addEventListener('click', async function() {
+			await goto('https://sta1kers.ru/bitva.php?mod=strike');
+			setInterval(async () => {
+				await goto('https://sta1kers.ru/bitva.php?mod=strike');
+			}, 10 * 1000)
 		});
 
 		await goto(urlZona);
