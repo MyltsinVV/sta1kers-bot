@@ -917,19 +917,23 @@
 			await walk(route);
 		}
 
-		let timer = 15 * 60;
+		if (start) {
+			let timer = 15 * 60;
 
-		let timerInterval = setInterval(() => {
-			timer--;
-			renderTimer(timer);
-			if (timer === 0) {
-				clearInterval(timerInterval);
-			}
-		}, 1000);
+			let timerInterval = setInterval(() => {
+				timer--;
+				renderTimer(timer);
+				if (timer === 0) {
+					clearInterval(timerInterval);
+				}
+			}, 1000);
 
-		setTimeout(async function () {
+			setTimeout(async function () {
+				await infinityArtifact();
+			}, 15 * 60 * 1000);
+		} else {
 			await infinityArtifact();
-		}, 15 * 60 * 1000);
+		}
 	}
 
 	function renderTimer(timer) {
