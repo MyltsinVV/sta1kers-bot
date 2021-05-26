@@ -263,6 +263,7 @@
 				<input type='button' id='artifact' value='One artifact'>
 				<span style="margin-left: 10px"></span>
 				<input type='button' id='artifactInfinity' value='Infinity artifacts'>
+				<span id="timer">15:00</span>
 			</div>
 		`);
 
@@ -908,8 +909,22 @@
 			await walk(route);
 		}
 
+		let timer = 15 * 60;
+
+		let timerInterval = setInterval(() => {
+			timer--;
+			renderTimer(timer);
+			if (timer === 0) {
+				clearInterval(timerInterval);
+			}
+		}, 1000);
+
 		setTimeout(async function () {
 			await infinityArtifact();
 		}, 15 * 60 * 1000);
+	}
+
+	function renderTimer(timer) {
+		document.querySelector('#timer').innerHTML = String(Math.floor(timer / 60)).padStart(2, '0') + ':' + String(timer % 60);
 	}
 })();
