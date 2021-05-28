@@ -529,8 +529,10 @@
 		await walk(1);
 		await walk(1);
 		await walk(4);
+		await goto('https://sta1kers.ru/npc/a_npc.php?npc_id=94');
 		await goto('https://sta1kers.ru/npc/a_npc.php?mod=daily');
 		await murderMutantsCount(5);
+		await goto('https://sta1kers.ru/npc/a_npc.php?npc_id=94');
 		await goto('https://sta1kers.ru/npc/a_npc.php?quest=709');
 		await walk(5);
 		await walk(8);
