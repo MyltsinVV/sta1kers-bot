@@ -484,9 +484,9 @@
 		await searchSwagBackwater(); // Поиск хабара на Затоне
 		await searchSwagDone(); // Сдача хабара Вобле
 		await questLisnik(); // Квест Лесника
-		await transitionFromBackwaterToPripyat(); // Переход в Припять
-		await questStrelokCompleted(); // Сдать квест Стрелка
-		await goto(urlZona);
+		// await transitionFromBackwaterToPripyat(); // Переход в Припять
+		// await questStrelokCompleted(); // Сдать квест Стрелка
+		// await goto(urlZona);
 	}
 
 	async function transitionFromPripyatToJupiter() {
