@@ -947,8 +947,7 @@
 	async function searchArtifactForSwamp(start) {
 		if (start) {
 			await goto(`${ urlZona }?mod=start_search`);
-			await awaitSec(32);
-			await goto(urlZona);
+			await awaitSec(31);
 		}
 
 		const content = getFrame().contentDocument.querySelector('#artefacts script')?.innerHTML;
