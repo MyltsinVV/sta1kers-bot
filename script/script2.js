@@ -266,6 +266,7 @@
 				<span style="margin-left: 5px"></span>
 				<input type='button' id='artifactInfinity' value='Infinity artifacts'>
 				<span id="timer">15:00</span>
+				<input style="margin-left: 5px" type='button' id='artifactForSwamp' value='арт на болоте'>
 			</div>
 		`);
 
@@ -299,6 +300,9 @@
 			setInterval(async () => {
 				await goto('https://sta1kers.ru/bitva.php?mod=strike');
 			}, 10 * 1000)
+		});
+		document.querySelector('#artifactForSwamp').addEventListener('click', async function() {
+			await searchArtifactForSwamp(true);
 		});
 
 		await goto(urlZona);
@@ -949,5 +953,20 @@
 
 	function renderTimer(timer) {
 		document.querySelector('#timer').innerHTML = String(Math.floor(timer / 60)).padStart(2, '0') + ':' + String(timer % 60).padStart(2, '0');
+	}
+
+	async function searchArtifactForSwamp(start) {
+		if (start) {
+			await goto(`${ urlZona }?mod=start_search`);
+			await awaitSec(32);
+			await goto(urlZona);
+		}
+
+		const content = getFrame().contentDocument.querySelector('#artefacts script')?.innerHTML;
+		const index = content?.indexOf('var danger = "');
+		if (index > 0) {
+			await goto(`${ urlZona }?step=${ content.slice(index + 14, index + 19).indexOf('0') }`);
+			await searchArtifactForSwamp();
+		}
 	}
 })();
