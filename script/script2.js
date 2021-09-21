@@ -212,6 +212,33 @@
 		},
 	];
 
+	const swampArtifacts = [
+		{
+			name: '«Листодув»Север',
+			pathTo: [1, 'n'],
+			pathBack: ['c', 8],
+			isArtifact: true,
+		},
+		{
+			name: '«Листодув»Восток',
+			pathTo: [1, 'e'],
+			pathBack: ['c', 8],
+			isArtifact: true,
+		},
+		{
+			name: '«Листодув»Юг',
+			pathTo: [1, 's'],
+			pathBack: ['c', 8],
+			isArtifact: true,
+		},
+		{
+			name: '«Листодув»Запад',
+			pathTo: [1, 'w'],
+			pathBack: ['c', 8],
+			isArtifact: true,
+		},
+	];
+
 	setTimeout(bot, 100);
 
 	async function bot() {
@@ -261,7 +288,6 @@
 				<input style="margin-left: 5px" type='button' id='artifact' value='One artifact'>
 				<input style="margin-left: 5px" type='button' id='artifactInfinity' value='Infinity artifacts'>
 				<span id="timer">15:00</span>
-				<input type='button' id='artifactForSwamp' value='арт на болоте'>
 			</div>
 		`);
 
@@ -285,13 +311,10 @@
 			await daily();
 		});
 		document.querySelector('#artifact').addEventListener('click', async function() {
-			await searchArtifact(true);
+			await startOneSearchArtifact();
 		});
 		document.querySelector('#artifactInfinity').addEventListener('click', async function() {
 			await infinityArtifact();
-		});
-		document.querySelector('#artifactForSwamp').addEventListener('click', async function() {
-			await searchArtifactForSwamp(true);
 		});
 
 		await goto(urlZona);
@@ -794,17 +817,43 @@
 		});
 	}
 
-	async function searchArtifact(start, newSearch) {
+	async function startOneSearchArtifact() {
 		if (getHp() === '0') {
 			await goto(`${ urlZona }?&apt=use`);
 			await awaitSec(2);
-			await searchArtifact(true);
+			await startOneSearchArtifact();
 			return;
 		}
-		if (start) {
-			await goto(`${ urlZona }?mod=start_search`);
-			await awaitSec(30);
-			await goto(urlZona);
+
+		await goto(`${ urlZona }?mod=start_search`);
+		await awaitSec(31);
+		await goto(urlZona);
+		await finishOneSearchArtifact();
+	}
+
+	async function finishOneSearchArtifact() {
+		if (getHp() === '0') {
+			await goto(`${ urlZona }?&apt=use`);
+			await awaitSec(2);
+			await startOneSearchArtifact();
+			return;
+		}
+
+		const content = getFrame().contentDocument.querySelector('#artefacts script')?.innerHTML;
+		const index = content?.indexOf('var danger = "');
+		if (index > 0) {
+			await searchArtifactForSwamp();
+		} else {
+			await searchArtifact();
+		}
+	}
+
+	async function searchArtifact(newSearch) {
+		if (getHp() === '0') {
+			await goto(`${ urlZona }?&apt=use`);
+			await awaitSec(2);
+			await startOneSearchArtifact();
+			return;
 		}
 		if (newSearch) {
 			if (getCurrentNameLoc().includes('Север')) {
@@ -823,7 +872,7 @@
 				await walk('n');
 				await walk('c');
 			}
-			await searchArtifact(true);
+			await startOneSearchArtifact();
 			return;
 		}
 
@@ -893,7 +942,7 @@
 			await searchArtifact();
 		} else {
 			if (indicator === 'red' && countMaxCharge === 9) {
-				await searchArtifact(false, true);
+				await searchArtifact(true);
 				return;
 			}
 			await goto(`${ urlZona }?&apt=use`);
@@ -903,7 +952,8 @@
 	}
 
 	async function infinityArtifact() {
-		const artifact = zatonArtifacts.filter((item) => item.isArtifact)[0];
+		const artifact = swampArtifacts.filter((item) => item.isArtifact)[0];
+		// TODO: Написать что артефакты закончились
 		if (!artifact) return;
 
 		for (const route of artifact.pathTo) {
@@ -912,7 +962,7 @@
 
 		const start = getFrame().contentDocument.querySelector('a[href="?mod=start_search"]');
 		if (start) {
-			await searchArtifact(true);
+			await startOneSearchArtifact();
 		} else {
 			artifact.isArtifact = false;
 		}
@@ -944,12 +994,7 @@
 		document.querySelector('#timer').innerHTML = String(Math.floor(timer / 60)).padStart(2, '0') + ':' + String(timer % 60).padStart(2, '0');
 	}
 
-	async function searchArtifactForSwamp(start) {
-		if (start) {
-			await goto(`${ urlZona }?mod=start_search`);
-			await awaitSec(31);
-		}
-
+	async function searchArtifactForSwamp() {
 		const content = getFrame().contentDocument.querySelector('#artefacts script')?.innerHTML;
 		const index = content?.indexOf('var danger = "');
 		if (index > 0) {
