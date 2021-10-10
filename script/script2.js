@@ -214,27 +214,75 @@
 
 	const swampArtifacts = [
 		{
-			name: '«Листодув»Север',
+			name: '«Листодув» Север',
 			pathTo: [1, 'n'],
 			pathBack: ['c', 8],
 			isArtifact: true,
 		},
 		{
-			name: '«Листодув»Восток',
+			name: '«Листодув» Восток',
 			pathTo: [1, 'e'],
 			pathBack: ['c', 8],
 			isArtifact: true,
 		},
 		{
-			name: '«Листодув»Юг',
+			name: '«Листодув» Юг',
 			pathTo: [1, 's'],
 			pathBack: ['c', 8],
 			isArtifact: true,
 		},
 		{
-			name: '«Листодув»Запад',
+			name: '«Листодув» Запад',
 			pathTo: [1, 'w'],
 			pathBack: ['c', 8],
+			isArtifact: true,
+		},
+		{
+			name: '«Водоворот» Север',
+			pathTo: [1, 1, 1, 'n'],
+			pathBack: ['c', 8, 8, 8],
+			isArtifact: true,
+		},
+		{
+			name: '«Водоворот» Восток',
+			pathTo: [1, 1, 1, 'e'],
+			pathBack: ['c', 8, 8, 8],
+			isArtifact: true,
+		},
+		{
+			name: '«Водоворот» Юг',
+			pathTo: [1, 1, 1, 's'],
+			pathBack: ['c', 8, 8, 8],
+			isArtifact: true,
+		},
+		{
+			name: '«Водоворот» Запад',
+			pathTo: [1, 1, 1, 'w'],
+			pathBack: ['c', 8, 8, 8],
+			isArtifact: true,
+		},
+		{
+			name: 'Тлеющий хутор Север',
+			pathTo: [1, 5, 5, 'n'],
+			pathBack: ['c', 4, 4, 8],
+			isArtifact: true,
+		},
+		{
+			name: 'Тлеющий хутор Восток',
+			pathTo: [1, 5, 5, 'e'],
+			pathBack: ['c', 4, 4, 8],
+			isArtifact: true,
+		},
+		{
+			name: 'Тлеющий хутор Юг',
+			pathTo: [1, 5, 5, 's'],
+			pathBack: ['c', 4, 4, 8],
+			isArtifact: true,
+		},
+		{
+			name: 'Тлеющий хутор Запад',
+			pathTo: [1, 5, 5, 'w'],
+			pathBack: ['c', 4, 4, 8],
 			isArtifact: true,
 		},
 	];
@@ -335,7 +383,7 @@
 
 	function getHp() {
 		const doc = getFrame().contentDocument;
-		return doc.querySelector('#top table.stalker_link.stalker_text td:first-child').innerText.trim();
+		return doc.querySelector('#top table.stalker_link.stalker_text td:first-child center:first-child').innerText.trim();
 	}
 
 	async function series() {
