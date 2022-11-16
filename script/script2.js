@@ -29,7 +29,7 @@
 		},
 		{
 			name: 'Речной порт',
-			path: [1, 5],
+			path: [1, 2],
 		},
 		{
 			name: 'Стадион «Авангард»',
@@ -49,43 +49,43 @@
 		},
 		{
 			name: 'Госпиталь',
-			path: [5],
+			path: [2],
 		},
 		{
 			name: 'ДК «Энергетик»',
-			path: [8, 4, 4, 4],
+			path: [3, 4, 4, 4],
 		},
 		{
 			name: 'Подземная автостоянка',
-			path: [8, 4, 4],
+			path: [3, 4, 4],
 		},
 		{
 			name: '«Вулкан»',
-			path: [8, 4],
+			path: [3, 4],
 		},
 		{
 			name: 'Детский сад',
-			path: [8],
+			path: [3],
 		},
 		{
 			name: 'Магазин «Берёзка»',
-			path: [8, 5],
+			path: [3, 2],
 		},
 		{
 			name: 'Гастроном',
-			path: [8, 8, 4, 4, 4],
+			path: [3, 3, 4, 4, 4],
 		},
 		{
 			name: 'Магазин «Книги»',
-			path: [8, 8, 4, 4],
+			path: [3, 3, 4, 4],
 		},
 		{
 			name: 'Универмаг',
-			path: [8, 8, 4],
+			path: [3, 3, 4],
 		},
 		{
 			name: 'Общежитие',
-			path: [8, 8],
+			path: [3, 3],
 		},
 	];
 
@@ -93,121 +93,121 @@
 		{
 			name: 'СгоревшийХуторСевер',
 			pathTo: [1, 4, 'n'],
-			pathBack: ['c', 5, 8],
+			pathBack: ['c', 2, 3],
 			isArtifact: true
 		},
 		{
 			name: 'СгоревшийХуторЗапад',
 			pathTo: [1, 4, 'w'],
-			pathBack: ['c', 5, 8],
+			pathBack: ['c', 2, 3],
 			isArtifact: true
 		},
 		{
 			name: 'СгоревшийХуторЮг',
 			pathTo: [1, 4, 's'],
-			pathBack: ['c', 5, 8],
+			pathBack: ['c', 2, 3],
 			isArtifact: true
 		},
 		{
 			name: 'Котёл',
-			pathTo: [1, 5],
-			pathBack: [4, 8],
+			pathTo: [1, 2],
+			pathBack: [4, 3],
 			isArtifact: true
 		},
 		{
 			name: 'КотёлСевер',
-			pathTo: [1, 5, 'n'],
-			pathBack: ['c', 4, 8],
+			pathTo: [1, 2, 'n'],
+			pathBack: ['c', 4, 3],
 			isArtifact: true
 		},
 		{
 			name: 'КотёлЗапад',
-			pathTo: [1, 5, 'w'],
-			pathBack: ['c', 4, 8],
+			pathTo: [1, 2, 'w'],
+			pathBack: ['c', 4, 3],
 			isArtifact: true
 		},
 		{
 			name: 'Топь',
 			pathTo: [4, 4],
-			pathBack: [5, 5],
+			pathBack: [2, 2],
 			isArtifact: true
 		},
 		{
 			name: 'ТопьСевер',
 			pathTo: [4, 4, 'n'],
-			pathBack: ['c', 5, 5],
+			pathBack: ['c', 2, 2],
 			isArtifact: true
 		},
 		{
 			name: 'ТопьЗапад',
 			pathTo: [4, 4, 'w'],
-			pathBack: ['c', 5, 5],
+			pathBack: ['c', 2, 2],
 			isArtifact: true
 		},
 		{
 			name: 'ТопьЮг',
 			pathTo: [4, 4, 's'],
-			pathBack: ['c', 5, 5],
+			pathBack: ['c', 2, 2],
 			isArtifact: true
 		},
 		{
 			name: 'ЗемснарядСевер',
-			pathTo: [5, 'n'],
+			pathTo: [2, 'n'],
 			pathBack: ['c', 4],
 			isArtifact: true
 		},
 		{
 			name: 'ЗемснарядВосток',
-			pathTo: [5, 'e'],
+			pathTo: [2, 'e'],
 			pathBack: ['c', 4],
 			isArtifact: true
 		},
 		{
 			name: 'ЗемснарядЮг',
-			pathTo: [5, 's'],
+			pathTo: [2, 's'],
 			pathBack: ['c', 4],
 			isArtifact: true
 		},
 		{
 			name: 'Соснодуб',
-			pathTo: [4, 4, 8, 8],
-			pathBack: [1, 1, 5, 5],
+			pathTo: [4, 4, 3, 3],
+			pathBack: [1, 1, 2, 2],
 			isArtifact: true
 		},
 		{
 			name: 'СоснодубСевер',
-			pathTo: [4, 4, 8, 8, 'n'],
-			pathBack: ['c', 1, 1, 5, 5],
+			pathTo: [4, 4, 3, 3, 'n'],
+			pathBack: ['c', 1, 1, 2, 2],
 			isArtifact: true
 		},
 		{
 			name: 'СоснодубСевер',
-			pathTo: [4, 4, 8, 8, 'w'],
-			pathBack: ['c', 1, 1, 5, 5],
+			pathTo: [4, 4, 3, 3, 'w'],
+			pathBack: ['c', 1, 1, 2, 2],
 			isArtifact: true
 		},
 		{
 			name: 'Коготь',
-			pathTo: [8, 8],
-			pathBack: [5, 5],
+			pathTo: [3, 3],
+			pathBack: [2, 2],
 			isArtifact: true
 		},
 		{
 			name: 'КоготьСевер',
-			pathTo: [8, 8, 'n'],
-			pathBack: ['c', 5, 5],
+			pathTo: [3, 3, 'n'],
+			pathBack: ['c', 2, 2],
 			isArtifact: true
 		},
 		{
 			name: 'КоготьЗапад',
-			pathTo: [8, 8, 'w'],
-			pathBack: ['c', 5, 5],
+			pathTo: [3, 3, 'w'],
+			pathBack: ['c', 2, 2],
 			isArtifact: true
 		},
 		{
 			name: 'КоготьВосток',
-			pathTo: [8, 8, 'e'],
-			pathBack: ['c', 5, 5],
+			pathTo: [3, 3, 'e'],
+			pathBack: ['c', 2, 2],
 			isArtifact: true
 		},
 	];
@@ -216,73 +216,73 @@
 		{
 			name: '«Листодув» Север',
 			pathTo: [1, 'n'],
-			pathBack: ['c', 8],
+			pathBack: ['c', 3],
 			isArtifact: true,
 		},
 		{
 			name: '«Листодув» Восток',
 			pathTo: [1, 'e'],
-			pathBack: ['c', 8],
+			pathBack: ['c', 3],
 			isArtifact: true,
 		},
 		{
 			name: '«Листодув» Юг',
 			pathTo: [1, 's'],
-			pathBack: ['c', 8],
+			pathBack: ['c', 3],
 			isArtifact: true,
 		},
 		{
 			name: '«Листодув» Запад',
 			pathTo: [1, 'w'],
-			pathBack: ['c', 8],
+			pathBack: ['c', 3],
 			isArtifact: true,
 		},
 		{
 			name: '«Водоворот» Север',
 			pathTo: [1, 1, 1, 'n'],
-			pathBack: ['c', 8, 8, 8],
+			pathBack: ['c', 3, 3, 3],
 			isArtifact: true,
 		},
 		{
 			name: '«Водоворот» Восток',
 			pathTo: [1, 1, 1, 'e'],
-			pathBack: ['c', 8, 8, 8],
+			pathBack: ['c', 3, 3, 3],
 			isArtifact: true,
 		},
 		{
 			name: '«Водоворот» Юг',
 			pathTo: [1, 1, 1, 's'],
-			pathBack: ['c', 8, 8, 8],
+			pathBack: ['c', 3, 3, 3],
 			isArtifact: true,
 		},
 		{
 			name: '«Водоворот» Запад',
 			pathTo: [1, 1, 1, 'w'],
-			pathBack: ['c', 8, 8, 8],
+			pathBack: ['c', 3, 3, 3],
 			isArtifact: true,
 		},
 		{
 			name: 'Тлеющий хутор Север',
-			pathTo: [1, 5, 5, 'n'],
-			pathBack: ['c', 4, 4, 8],
+			pathTo: [1, 2, 2, 'n'],
+			pathBack: ['c', 4, 4, 3],
 			isArtifact: true,
 		},
 		{
 			name: 'Тлеющий хутор Восток',
-			pathTo: [1, 5, 5, 'e'],
-			pathBack: ['c', 4, 4, 8],
+			pathTo: [1, 2, 2, 'e'],
+			pathBack: ['c', 4, 4, 3],
 			isArtifact: true,
 		},
 		{
 			name: 'Тлеющий хутор Юг',
-			pathTo: [1, 5, 5, 's'],
-			pathBack: ['c', 4, 4, 8],
+			pathTo: [1, 2, 2, 's'],
+			pathBack: ['c', 4, 4, 3],
 			isArtifact: true,
 		},
 		{
 			name: 'Тлеющий хутор Запад',
-			pathTo: [1, 5, 5, 'w'],
-			pathBack: ['c', 4, 4, 8],
+			pathTo: [1, 2, 2, 'w'],
+			pathBack: ['c', 4, 4, 3],
 			isArtifact: true,
 		},
 	];
@@ -591,10 +591,10 @@
 		await searchSwag();
 		// Четвёртая полоса
 		await walk(4);
-		await walk(8);
-		await walk(8);
+		await walk(3);
+		await walk(3);
 		await searchSwag();
-		await walk(8);
+		await walk(3);
 		await searchSwag();
 		// Треться полоса
 		await walk(4);
@@ -606,11 +606,11 @@
 		await searchSwag();
 		// Вторая полоса
 		await walk(4);
-		await walk(8);
+		await walk(3);
 		await searchSwag();
-		await walk(8);
+		await walk(3);
 		await searchSwag();
-		await walk(8);
+		await walk(3);
 		await searchSwag();
 		// Первая полоса
 		await walk(4);
@@ -622,27 +622,27 @@
 		await walk(1);
 		await searchSwag();
 		// Возваращение на базу
-		await walk(5);
-		await walk(5);
-		await walk(5);
-		await walk(5);
-		await walk(8);
-		await walk(8);
-		await walk(8);
+		await walk(2);
+		await walk(2);
+		await walk(2);
+		await walk(2);
+		await walk(3);
+		await walk(3);
+		await walk(3);
 	}
 
 	async function searchSwagJupiter() {
 		// Первая полоса
 		await walk(4);
 		await searchSwag();
-		await walk(8);
+		await walk(3);
 		await searchSwag();
-		await walk(8);
+		await walk(3);
 		await searchSwag();
-		await walk(8);
+		await walk(3);
 		await searchSwag();
 		// Вторая полоса
-		await walk(5);
+		await walk(2);
 		await searchSwag();
 		await walk(1);
 		await searchSwag();
@@ -651,19 +651,19 @@
 		await walk(1);
 		await searchSwag();
 		// Третья полоса
-		await walk(5);
+		await walk(2);
 		await searchSwag();
-		await walk(8);
+		await walk(3);
 		await searchSwag();
-		await walk(8);
+		await walk(3);
 		await searchSwag();
-		await walk(8);
+		await walk(3);
 		await searchSwag();
-		await walk(8);
+		await walk(3);
 		await searchSwag();
 		// Четвёртая и пятая полоса
-		await walk(5);
-		await walk(5);
+		await walk(2);
+		await walk(2);
 		await searchSwag();
 		await walk(4);
 		await walk(1);
@@ -672,13 +672,13 @@
 		await walk(1);
 		await searchSwag();
 		await walk(1);
-		await walk(5);
+		await walk(2);
 		await searchSwag();
 		// Возвращение на базу
 		await walk(4);
 		await walk(4);
 		await walk(4);
-		await walk(8);
+		await walk(3);
 	}
 
 	async function searchSwagBackwater() {
@@ -687,13 +687,13 @@
 		await walk(4);
 		await walk(4);
 		await searchSwag();
-		await walk(8);
-		await walk(8);
+		await walk(3);
+		await walk(3);
 		await searchSwag();
-		await walk(8);
-		await walk(8);
+		await walk(3);
+		await walk(3);
 		// Вторая полоса
-		await walk(5);
+		await walk(2);
 		await searchSwag();
 		await walk(1);
 		await searchSwag();
@@ -704,19 +704,19 @@
 		await walk(1);
 		await searchSwag();
 		// Третья полоса
-		await walk(5);
+		await walk(2);
 		await searchSwag();
-		await walk(8);
-		await walk(8);
+		await walk(3);
+		await walk(3);
 		await searchSwag();
 		// Четвёртая полоса
-		await walk(5);
+		await walk(2);
 		await searchSwag();
-		await walk(8);
+		await walk(3);
 		// Пятая полоса
-		await walk(5);
+		await walk(2);
 		await searchSwag();
-		await walk(8);
+		await walk(3);
 		await searchSwag();
 		// Возвращаемся домой
 		await walk(4);
@@ -735,22 +735,22 @@
 		await murderMutantsCount(5);
 		await goto('https://sta1kers.ru/npc/a_npc.php?npc_id=94');
 		await goto('https://sta1kers.ru/npc/a_npc.php?quest=709');
-		await walk(5);
-		await walk(8);
-		await walk(8);
+		await walk(2);
+		await walk(3);
+		await walk(3);
 		await goto('https://sta1kers.ru/npc/rogovec.php?quest=710');
 		await walk(1);
 		await walk(1);
 		await progressClick();
 		await murderMutantsCount(5);
-		await walk(8);
-		await walk(8);
+		await walk(3);
+		await walk(3);
 		await goto('https://sta1kers.ru/npc/rogovec.php?quest=721');
 		await walk(1);
 		await walk(1);
 		await progressClick();
-		await walk(8);
-		await walk(8);
+		await walk(3);
+		await walk(3);
 		await goto('https://sta1kers.ru/npc/rogovec.php?quest=727');
 		await walk('s');
 		await goto('https://sta1kers.ru/npc/a_npc.php?npc_id=82');
@@ -761,18 +761,18 @@
 		await walk(4);
 		await goto('https://sta1kers.ru/npc/a_npc.php?npc_id=94');
 		await goto('https://sta1kers.ru/npc/a_npc.php?quest=729');
-		await walk(5);
-		await walk(8);
-		await walk(8);
+		await walk(2);
+		await walk(3);
+		await walk(3);
 	}
 
 	async function questSokolov() {
-		await walk(8);
+		await walk(3);
 		await goto('https://sta1kers.ru/npc/a_npc.php?npc_id=50');
 		await goto('https://sta1kers.ru/npc/a_npc.php?mod=daily');
 		await walk(4);
 		await murderMutantsCount(5);
-		await walk(5);
+		await walk(2);
 		await goto('https://sta1kers.ru/npc/a_npc.php?npc_id=50');
 		await goto('https://sta1kers.ru/npc/a_npc.php?quest=614');
 		await walk(1);
@@ -789,9 +789,9 @@
 		await goto('https://sta1kers.ru/zona.php?wd_pass=100&wd_key=RLRLRLRLRL');
 		await goto('https://sta1kers.ru/npc/lesnik.php');
 		await goto('https://sta1kers.ru/npc/lesnik.php?quest=848');
-		await walk(5);
-		await walk(5);
-		await walk(8);
+		await walk(2);
+		await walk(2);
+		await walk(3);
 	}
 
 	async function questStrelokStart() {
@@ -801,21 +801,21 @@
 
 	async function questStrelokProgress() {
 		await walk(4);
-		await walk(8);
-		await walk(8);
-		await walk(8);
+		await walk(3);
+		await walk(3);
+		await walk(3);
 		await progressClick(false);
 		await walk(1);
 		await walk(1);
 		await walk(1);
 		await walk(1);
-		await walk(5);
-		await walk(5);
+		await walk(2);
+		await walk(2);
 		await progressClick(false);
-		await walk(8);
-		await walk(8);
-		await walk(8);
-		await walk(5);
+		await walk(3);
+		await walk(3);
+		await walk(3);
+		await walk(2);
 		await progressClick(false);
 		await walk(1);
 		await walk(1);
