@@ -661,24 +661,28 @@
 		await searchSwag();
 		await walk(3);
 		await searchSwag();
-		// Четвёртая и пятая полоса
+		// Пятая полоса
 		await walk(2);
 		await walk(2);
 		await searchSwag();
+		await walk(1);
+		await searchSwag();
+		await walk(1);
+		await searchSwag();
+		await walk(1);
+		await searchSwag();
+		await walk(1);
+		await searchSwag();
+		// Четвёртая полоса
 		await walk(4);
-		await walk(1);
-		await walk(1);
+		await walk(3);
 		await searchSwag();
-		await walk(1);
-		await searchSwag();
-		await walk(1);
-		await walk(2);
+		await walk(3);
 		await searchSwag();
 		// Возвращение на базу
 		await walk(4);
 		await walk(4);
-		await walk(4);
-		await walk(3);
+		await walk(1);
 	}
 
 	async function searchSwagBackwater() {
@@ -713,17 +717,22 @@
 		await walk(2);
 		await searchSwag();
 		await walk(3);
+		await walk(3);
 		// Пятая полоса
 		await walk(2);
 		await searchSwag();
-		await walk(3);
+		await walk(1);
+		await searchSwag();
+		await walk(1);
+		await searchSwag();
+		await walk(1);
+		await searchSwag();
+		await walk(1);
 		await searchSwag();
 		// Возвращаемся домой
 		await walk(4);
 		await walk(4);
-		await walk(1);
-		await walk(1);
-		await walk(1);
+		await walk(3);
 	}
 
 	async function questZulus() {
