@@ -217,66 +217,133 @@
 			name: '«Листодув» Север',
 			pathTo: [1, 'n'],
 			pathBack: ['c', 3],
+			pathNext: ['e'],
 			isArtifact: true,
 		},
 		{
 			name: '«Листодув» Восток',
 			pathTo: [1, 'e'],
 			pathBack: ['c', 3],
+			pathNext: ['s'],
 			isArtifact: true,
 		},
 		{
 			name: '«Листодув» Юг',
 			pathTo: [1, 's'],
 			pathBack: ['c', 3],
+			pathNext: ['w'],
 			isArtifact: true,
 		},
 		{
 			name: '«Листодув» Запад',
 			pathTo: [1, 'w'],
 			pathBack: ['c', 3],
+			pathNext: ['c', 1, 1, 'n'],
 			isArtifact: true,
 		},
 		{
 			name: '«Водоворот» Север',
 			pathTo: [1, 1, 1, 'n'],
 			pathBack: ['c', 3, 3, 3],
+			pathNext: ['e'],
 			isArtifact: true,
 		},
 		{
 			name: '«Водоворот» Восток',
 			pathTo: [1, 1, 1, 'e'],
 			pathBack: ['c', 3, 3, 3],
+			pathNext: ['s'],
 			isArtifact: true,
 		},
 		{
 			name: '«Водоворот» Юг',
 			pathTo: [1, 1, 1, 's'],
 			pathBack: ['c', 3, 3, 3],
+			pathNext: ['w'],
 			isArtifact: true,
 		},
 		{
 			name: '«Водоворот» Запад',
 			pathTo: [1, 1, 1, 'w'],
 			pathBack: ['c', 3, 3, 3],
+			pathNext: ['c', 2, 2, 'n'],
+			isArtifact: true,
+		},
+		{
+			name: '«Трясина» Север',
+			pathTo: [1, 1, 1, 2, 2,'n'],
+			pathBack: ['c', 4, 4, 3, 3, 3],
+			pathNext: ['e'],
+			isArtifact: true,
+		},
+		{
+			name: '«Трясина» Восток',
+			pathTo: [1, 1, 1, 2, 2,'e'],
+			pathBack: ['c', 4, 4, 3, 3, 3],
+			pathNext: ['s'],
+			isArtifact: true,
+		},
+		{
+			name: '«Трясина» Юг',
+			pathTo: [1, 1, 1, 2, 2,'s'],
+			pathBack: ['c', 4, 4, 3, 3, 3],
+			pathNext: ['w'],
+			isArtifact: true,
+		},
+		{
+			name: '«Трясина» Запад',
+			pathTo: [1, 1, 1, 2, 2,'w'],
+			pathBack: ['c', 4, 4, 3, 3, 3],
+			pathNext: ['c', 2, 2, 'n'],
+			isArtifact: true,
+		},
+		{
+			name: '«Плиты» Север',
+			pathTo: [1, 1, 1, 2, 2, 2, 2,'n'],
+			pathBack: ['c', 4, 4, 4, 4, 3, 3, 3],
+			pathNext: ['e'],
+			isArtifact: true,
+		},
+		{
+			name: '«Плиты» Восток',
+			pathTo: [1, 1, 1, 2, 2, 2, 2, 'e'],
+			pathBack: ['c', 4, 4, 4, 4, 3, 3, 3],
+			pathNext: ['s'],
+			isArtifact: true,
+		},
+		{
+			name: '«Плиты» Юг',
+			pathTo: [1, 1, 1, 2, 2, 2, 2, 's'],
+			pathBack: ['c', 4, 4, 4, 4, 3, 3, 3],
+			pathNext: ['w'],
+			isArtifact: true,
+		},
+		{
+			name: '«Плиты» Запад',
+			pathTo: [1, 1, 1, 2, 2, 2, 2, 'w'],
+			pathBack: ['c', 4, 4, 4, 4, 3, 3, 3],
+			pathNext: ['c', 4, 4, 3, 3, 'n'],
 			isArtifact: true,
 		},
 		{
 			name: 'Тлеющий хутор Север',
 			pathTo: [1, 2, 2, 'n'],
 			pathBack: ['c', 4, 4, 3],
+			pathNext: ['e'],
 			isArtifact: true,
 		},
 		{
 			name: 'Тлеющий хутор Восток',
 			pathTo: [1, 2, 2, 'e'],
 			pathBack: ['c', 4, 4, 3],
+			pathNext: ['s'],
 			isArtifact: true,
 		},
 		{
 			name: 'Тлеющий хутор Юг',
 			pathTo: [1, 2, 2, 's'],
 			pathBack: ['c', 4, 4, 3],
+			pathNext: ['w'],
 			isArtifact: true,
 		},
 		{
@@ -1009,7 +1076,7 @@
 	}
 
 	async function infinityArtifact() {
-		const artifact = swampArtifacts.filter((item) => item.isArtifact)[0];
+		let artifact = swampArtifacts.find((item) => item.isArtifact);
 		// TODO: Написать что артефакты закончились
 		if (!artifact) return;
 
@@ -1019,16 +1086,19 @@
 
 		const start = getFrame().contentDocument.querySelector('a[href="?mod=start_search"]');
 		if (start) {
+			artifact.isStart = true
 			await startOneSearchArtifact();
 		} else {
 			artifact.isArtifact = false;
+
+			artifact = await nextArtifact(artifact)
 		}
 
 		for (const route of artifact.pathBack) {
 			await walk(route);
 		}
 
-		if (start) {
+		if (artifact.isStart) {
 			let timer = 15 * 60;
 
 			let timerInterval = setInterval(() => {
@@ -1045,6 +1115,27 @@
 		} else {
 			await infinityArtifact();
 		}
+	}
+
+	async function nextArtifact(artifact) {
+		if (!artifact.pathNext) return artifact
+
+		for (const route of artifact.pathNext) {
+			await walk(route)
+		}
+
+		artifact = swampArtifacts.find((item) => item.isArtifact)
+		const start = getFrame().contentDocument.querySelector('a[href="?mod=start_search"]');
+		if (start) {
+			artifact.isStart = true
+			await startOneSearchArtifact();
+		} else {
+			artifact.isArtifact = false;
+
+			artifact = await nextArtifact(artifact)
+		}
+
+		return artifact
 	}
 
 	function renderTimer(timer) {
