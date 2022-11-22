@@ -1117,6 +1117,7 @@
 			}, 1000);
 
 			setTimeout(async function () {
+				clearInterval(timerInterval);
 				await infinityArtifact();
 			}, 15 * 60 * 1000);
 		} else {
