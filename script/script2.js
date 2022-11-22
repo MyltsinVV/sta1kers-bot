@@ -1076,7 +1076,14 @@
 	}
 
 	async function infinityArtifact() {
-		let artifact = swampArtifacts.find((item) => item.isArtifact);
+		let artifacts
+		if (getCurrentNameLoc() === 'База «Чистого неба»') {
+			artifacts = swampArtifacts
+		} else {
+			artifacts = zatonArtifacts
+		}
+
+		let artifact = artifacts.find((item) => item.isArtifact);
 		// TODO: Написать что артефакты закончились
 		if (!artifact) return;
 
@@ -1091,7 +1098,7 @@
 		} else {
 			artifact.isArtifact = false;
 
-			artifact = await nextArtifact(artifact)
+			artifact = await nextArtifact(artifact, artifacts)
 		}
 
 		for (const route of artifact.pathBack) {
@@ -1117,14 +1124,14 @@
 		}
 	}
 
-	async function nextArtifact(artifact) {
+	async function nextArtifact(artifact, artifacts) {
 		if (!artifact.pathNext) return artifact
 
 		for (const route of artifact.pathNext) {
 			await walk(route)
 		}
 
-		artifact = swampArtifacts.find((item) => item.isArtifact)
+		artifact = artifacts.find((item) => item.isArtifact)
 		const start = getFrame().contentDocument.querySelector('a[href="?mod=start_search"]');
 		if (start) {
 			artifact.isStart = true
@@ -1132,7 +1139,7 @@
 		} else {
 			artifact.isArtifact = false;
 
-			artifact = await nextArtifact(artifact)
+			artifact = await nextArtifact(artifact, artifacts)
 		}
 
 		return artifact
