@@ -1,4 +1,5 @@
 (function() {
+	const domen = 'https://sta1kers.ru/'
 	const urlZona = 'https://sta1kers.ru/zona.php';
 
 	let farmArr;
@@ -604,20 +605,18 @@
 	}
 
 	async function daily() {
-		await searchSwagPripyat(); // Поиск хабара в Припяти
-		await questZulus(); // Квест Зулуса
-		await questStrelokStart();// Взять квест Стрелка
-		await transitionFromPripyatToJupiter(); // Переход на Юпитер
-		await searchSwagJupiter(); // Поиск хабара на Юпитере
-		await questSokolov(); // Квест Соколова
-		await questStrelokProgress(); // Выполнить квест Стрелка
-		await transitionFromJupiterToBackwater(); // Переход на Затон
-		await searchSwagBackwater(); // Поиск хабара на Затоне
-		await searchSwagDone(); // Сдача хабара Вобле
-		await questLisnik(); // Квест Лесника
-		// await transitionFromBackwaterToPripyat(); // Переход в Припять
-		// await questStrelokCompleted(); // Сдать квест Стрелка
-		// await goto(urlZona);
+		// await searchSwagPripyat(); // Поиск хабара в Припяти
+		// await questZulus(); // Квест Зулуса
+		// await questStrelokStart();// Взять квест Стрелка
+		// await transitionFromPripyatToJupiter(); // Переход на Юпитер
+		await questKostopravStart()
+		// await searchSwagJupiter(); // Поиск хабара на Юпитере
+		// await questSokolov(); // Квест Соколова
+		// await questStrelokProgress(); // Выполнить квест Стрелка
+		// await transitionFromJupiterToBackwater(); // Переход на Затон
+		// await searchSwagBackwater(); // Поиск хабара на Затоне
+		// await searchSwagDone(); // Сдача хабара Вобле
+		// await questLisnik(); // Квест Лесника
 	}
 
 	async function transitionFromPripyatToJupiter() {
@@ -811,6 +810,7 @@
 		await murderMutantsCount(5);
 		await goto('https://sta1kers.ru/npc/a_npc.php?npc_id=94');
 		await goto('https://sta1kers.ru/npc/a_npc.php?quest=709');
+		await walk('c');
 		await walk(2);
 		await walk(3);
 		await walk(3);
@@ -837,6 +837,7 @@
 		await walk(4);
 		await goto('https://sta1kers.ru/npc/a_npc.php?npc_id=94');
 		await goto('https://sta1kers.ru/npc/a_npc.php?quest=729');
+		await walk('c');
 		await walk(2);
 		await walk(3);
 		await walk(3);
@@ -897,6 +898,11 @@
 		await walk(1);
 		await walk(4);
 		await walk(4);
+	}
+
+	async function questKostopravStart() {
+		await walk('n')
+		await goto(domen + 'npc/kostoprav.php');
 	}
 
 	async function questStrelokCompleted() {
