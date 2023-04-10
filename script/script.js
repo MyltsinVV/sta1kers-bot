@@ -605,18 +605,18 @@
 	}
 
 	async function daily() {
-		// await searchSwagPripyat(); // Поиск хабара в Припяти
-		// await questZulus(); // Квест Зулуса
-		// await questStrelokStart();// Взять квест Стрелка
-		// await transitionFromPripyatToJupiter(); // Переход на Юпитер
-		await questKostopravStart()
-		// await searchSwagJupiter(); // Поиск хабара на Юпитере
-		// await questSokolov(); // Квест Соколова
-		// await questStrelokProgress(); // Выполнить квест Стрелка
-		// await transitionFromJupiterToBackwater(); // Переход на Затон
-		// await searchSwagBackwater(); // Поиск хабара на Затоне
-		// await searchSwagDone(); // Сдача хабара Вобле
-		// await questLisnik(); // Квест Лесника
+		await searchSwagPripyat(); // Поиск хабара в Припяти
+		await questZulus(); // Квест Зулуса
+		await questStrelokStart();// Взять квест Стрелка
+		await transitionFromPripyatToJupiter(); // Переход на Юпитер
+		// await questKostopravStart()
+		await searchSwagJupiter(); // Поиск хабара на Юпитере
+		await questSokolov(); // Квест Соколова
+		await questStrelokProgress(); // Выполнить квест Стрелка
+		await transitionFromJupiterToBackwater(); // Переход на Затон
+		await searchSwagBackwater(); // Поиск хабара на Затоне
+		await searchSwagDone(); // Сдача хабара Вобле
+		await questLisnik(); // Квест Лесника
 	}
 
 	async function transitionFromPripyatToJupiter() {
