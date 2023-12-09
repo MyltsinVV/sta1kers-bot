@@ -403,7 +403,7 @@
 				<input style="margin-left: 5px" type='button' id='daily' value='Daily'>
 				<input style="margin-left: 5px" type='button' id='artifact' value='One artifact'>
 				<input style="margin-left: 5px" type='button' id='artifactInfinity' value='Infinity artifacts'>
-				<span id="timer">2:00</span>
+				<span id="timer">0:23</span>
 			</div>
 		`);
 
@@ -1112,7 +1112,7 @@
 		}
 
 		if (artifact.isStart) {
-			let timer = 2 * 60;
+			let timer = 23;
 
 			let timerInterval = setInterval(() => {
 				timer--;
@@ -1125,7 +1125,7 @@
 			setTimeout(async function () {
 				clearInterval(timerInterval);
 				await infinityArtifact();
-			}, 2 * 60 * 1000);
+			}, 23 * 1000);
 		} else {
 			await infinityArtifact();
 		}
