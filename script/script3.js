@@ -405,6 +405,7 @@
 				<input style="margin-left: 5px" type='button' id='artifactInfinity' value='Infinity artifacts'>
 				<span id="timer">9 сек</span>
 				<span id="info"></span>
+				<input style="margin-left: 5px" type='button' id='raid' value='Рейд'>
 			</div>
 		`);
 
@@ -432,6 +433,9 @@
 		});
 		document.querySelector('#artifactInfinity').addEventListener('click', async function() {
 			await infinityArtifact();
+		});
+		document.querySelector('#raid').addEventListener('click', async function() {
+			await raid();
 		});
 
 		await goto(urlZona);
@@ -1148,5 +1152,24 @@
 			await goto(`${ urlZona }?step=${ content.slice(index + 14, index + 19).indexOf('0') }`);
 			await searchArtifactForSwamp();
 		}
+	}
+
+	async function raid() {
+		const mutants = getFrame().contentDocument.querySelectorAll('.raid_mutants_wrap img.burer_breath');
+		let count = 0;
+
+		for (let mutant of mutants) {
+			if (mutant.style.visibility) count++
+			mutant.click();
+		}
+
+		if (mutants.length === count) {
+			const moveBtn = getFrame().contentDocument.querySelector('#moveBtn');
+			console.log(moveBtn)
+			moveBtn.click();
+		}
+
+		await awaitSec(11);
+		await raid()
 	}
 })();
