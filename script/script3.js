@@ -1155,6 +1155,28 @@
 	}
 
 	async function raid() {
+		await goto(urlZona + '?mod=create_party');
+		await goto(domen + 'raid_start.php');
+
+		const startRaid = getFrame().contentDocument.querySelector('img[src="../raids/img/raids_start_button.jpg"]')
+		startRaid?.click();
+		await awaitSec(2);
+
+		await raidGame()
+	}
+
+	async function raidGame() {
+		const endScreen = getFrame().contentDocument.querySelector('#endScreen')
+		if (endScreen.style.opacity !== '0') {
+			const nextBtn = getFrame().contentDocument.querySelector('#nextFieldBtn')
+			nextBtn.click();
+			await awaitSec(2);
+
+			const startRaid = getFrame().contentDocument.querySelector('img[src="../raids/img/raids_start_button.jpg"]')
+			startRaid.click();
+			await awaitSec(2);
+		}
+
 		const mutants = getFrame().contentDocument.querySelectorAll('.raid_mutants_wrap img.burer_breath');
 		let count = 0;
 
@@ -1165,11 +1187,10 @@
 
 		if (mutants.length === count) {
 			const moveBtn = getFrame().contentDocument.querySelector('#moveBtn');
-			console.log(moveBtn)
 			moveBtn.click();
 		}
 
 		await awaitSec(11);
-		await raid()
+		await raidGame()
 	}
 })();
