@@ -382,7 +382,7 @@
 			<iframe
 				id="testbot"
 				src='${ l }' 
-				style='z-index: 100; position: fixed; top: 26px; height: calc(100% - 26px); width: 100%; left: 0; border: unset;'
+				style='z-index: 100; position: fixed; top: 52px; height: calc(100% - 52px); width: 100%; left: 0; border: unset;'
 			>
 			</iframe>
 			<span></span>	
@@ -404,9 +404,10 @@
 				<input style="margin-left: 5px" type='button' id='artifact' value='One artifact'>
 				<input style="margin-left: 5px" type='button' id='artifactInfinity' value='Infinity artifacts'>
 				<span id="timer">9 сек</span>
-				<span id="info"></span>
 				<input style="margin-left: 5px" type='button' id='raid' value='Рейд'>
+				<input style="margin-left: 5px" type='button' id='chase' value='Погоня'>
 			</div>
+			<div id="info" style="height: 26px; line-height: 26px; padding: 0 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></div>
 		`);
 
 		jQuery('#run').click(function() {
@@ -436,6 +437,23 @@
 		});
 		document.querySelector('#raid').addEventListener('click', async function() {
 			await raid();
+		});
+		document.querySelector('#chase').addEventListener('click', async function() {
+			// Повторное нажатие во время езды — остановка после текущего хода
+			if (chaseRunning) {
+				chaseStopRequested = true;
+				this.value = 'Останавливаю…';
+				return;
+			}
+			this.value = 'Стоп погоня';
+			try {
+				await chase();
+			} catch (e) {
+				chaseInfo(`Погоня: ошибка — ${ e.message }`);
+				console.error(e);
+			} finally {
+				this.value = 'Погоня';
+			}
 		});
 
 		await goto(urlZona);
@@ -1192,5 +1210,213 @@
 
 		await awaitSec(11);
 		await raidGame()
+	}
+
+	// ================= Погоня =================
+	// Открыть погоню во фрейме и нажать «Погоня»: бот считает маршрут с максимумом
+	// бонусов (при равенстве — минимум ходов) и сам жмёт стрелки.
+
+	const CHASE_SIZE = 10;
+	const CHASE_POLL_SEC = 0.5;     // интервал проверки, появились ли новые кнопки
+	const CHASE_MOVE_TIMEOUT = 15;  // сколько секунд ждать отрисовки хода
+
+	const CHASE_RULES = [ // первое совпадение определяет тип клетки
+		{ type: 'car', re: /^uaz_/ },
+		{ type: 'finish', re: /^maze_finish/ },
+		{ type: 'bonus', re: /^cell_bonus/ },
+		{ type: 'radiation', re: /^cell_rad/ },
+	];
+	const CHASE_FLOOR = /dirt/;
+	const CHASE_DIRS = ['up', 'down', 'left', 'right'];
+	const CHASE_DELTA = { up: [-1, 0], down: [1, 0], left: [0, -1], right: [0, 1] };
+	const CHASE_OPP = { up: 'down', down: 'up', left: 'right', right: 'left' };
+	const CHASE_WALL = { top_wall: 'up', bottom_wall: 'down', left_wall: 'left', right_wall: 'right' };
+	const CHASE_BUTTON = { up: 'top_arrow', down: 'bottom_arrow', left: 'left_arrow', right: 'right_arrow' };
+	const CHASE_ARROW = { up: '↑', down: '↓', left: '←', right: '→' };
+
+	let chaseRunning = false;
+	let chaseStopRequested = false;
+
+	function chaseInfo(text) {
+		document.querySelector('#info').innerHTML = text;
+		console.log(text);
+	}
+
+	function chaseDoc() {
+		return getFrame().contentDocument;
+	}
+
+	function chaseImages(node) {
+		const fileName = (url) => url.split('/').pop().split('?')[0];
+		const out = [];
+		for (const el of node.querySelectorAll('*')) {
+			const src = el.tagName === 'IMG' && el.getAttribute('src');
+			if (src) out.push(fileName(src));
+			for (const m of (el.getAttribute('style') || '').matchAll(/url\(\s*["']?([^"')]+)/g)) out.push(fileName(m[1]));
+		}
+		return out.filter((f) => !CHASE_FLOOR.test(f));
+	}
+
+	// Поле из документа фрейма; null — если на странице нет поля погони
+	function chaseParse(doc) {
+		const nodes = [...(doc?.querySelectorAll('#content center #map_cell') ?? [])];
+		if (nodes.length !== CHASE_SIZE * CHASE_SIZE) return null;
+
+		const grid = Array.from({ length: CHASE_SIZE }, (_, r) =>
+			Array.from({ length: CHASE_SIZE }, (_, c) => ({
+				r, c, type: 'empty',
+				walls: { up: r === 0, down: r === CHASE_SIZE - 1, left: c === 0, right: c === CHASE_SIZE - 1 },
+			})),
+		);
+
+		nodes.forEach((node, i) => {
+			const cell = grid[Math.floor(i / CHASE_SIZE)][i % CHASE_SIZE];
+			for (const el of node.querySelectorAll('[id$="_wall"]')) {
+				const dir = CHASE_WALL[el.id];
+				if (!dir) continue;
+				cell.walls[dir] = true;
+				const [dr, dc] = CHASE_DELTA[dir];
+				const nb = grid[cell.r + dr]?.[cell.c + dc];
+				if (nb) nb.walls[CHASE_OPP[dir]] = true;
+			}
+			const files = chaseImages(node);
+			const rule = CHASE_RULES.find((rl) => files.some((f) => rl.re.test(f)));
+			if (rule) cell.type = rule.type;
+		});
+
+		const flat = grid.flat();
+		const car = flat.find((c) => c.type === 'car');
+		return {
+			grid,
+			carPos: car ? car.r * CHASE_SIZE + car.c : -1,
+			finishes: flat.filter((c) => c.type === 'finish'),
+			bonuses: flat.filter((c) => c.type === 'bonus'),
+			key: flat.map((c) => CHASE_DIRS.map((d) => +c.walls[d]).join('')).join(''), // отпечаток стен
+		};
+	}
+
+	// BFS по (позиция, маска бонусов). Возвращает лучший маршрут или null.
+	function chaseSolve(field) {
+		const { grid, carPos, finishes, bonuses } = field;
+		const SIZE = CHASE_SIZE, CELLS = SIZE * SIZE;
+		const bit = new Map(bonuses.map((c, i) => [c.r * SIZE + c.c, i]));
+		const B = bonuses.length, MASKS = 1 << B, FULL = MASKS - 1;
+
+		const isFinish = new Uint8Array(CELLS);
+		for (const f of finishes) isFinish[f.r * SIZE + f.c] = 1;
+
+		// Скольжение до упора, бонусы собираются по пути
+		const slide = (pos, dir) => {
+			let r = Math.floor(pos / SIZE), c = pos % SIZE, gained = 0, moved = false;
+			const [dr, dc] = CHASE_DELTA[dir];
+			while (!grid[r][c].walls[dir]) {
+				r += dr; c += dc; moved = true;
+				const b = bit.get(r * SIZE + c);
+				if (b !== undefined) gained |= 1 << b;
+			}
+			return moved ? { pos: r * SIZE + c, gained } : null;
+		};
+		const moves = Array.from({ length: CELLS }, (_, pos) => CHASE_DIRS.map((d) => slide(pos, d)));
+
+		const N = CELLS * MASKS;
+		const dist = new Int32Array(N).fill(-1);
+		const parent = new Int32Array(N).fill(-1);
+		const via = new Int8Array(N).fill(-1);
+		const startState = carPos * MASKS;
+		dist[startState] = 0;
+		const queue = [startState];
+		const best = new Array(B + 1).fill(-1);
+		const popcount = (x) => { let n = 0; while (x) { x &= x - 1; n++; } return n; };
+
+		for (let head = 0; head < queue.length; head++) {
+			const s = queue[head];
+			const pos = Math.floor(s / MASKS), mask = s % MASKS;
+			if (isFinish[pos] && s !== startState) { // остановка на финише завершает уровень
+				const k = popcount(mask);
+				if (best[k] === -1) best[k] = s;
+				if (mask === FULL) break;
+				continue;
+			}
+			for (let d = 0; d < 4; d++) {
+				const m = moves[pos][d];
+				if (!m) continue;
+				const ns = m.pos * MASKS + (mask | m.gained);
+				if (dist[ns] !== -1) continue;
+				dist[ns] = dist[s] + 1; parent[ns] = s; via[ns] = d;
+				queue.push(ns);
+			}
+		}
+
+		for (let k = B; k >= 0; k--) {
+			const s = best[k];
+			if (s === -1) continue;
+			const dirs = [], stops = [];
+			for (let cur = s; cur !== startState; cur = parent[cur]) {
+				dirs.push(CHASE_DIRS[via[cur]]);
+				stops.push(Math.floor(cur / MASKS));
+			}
+			return { bonuses: k, total: B, dirs: dirs.reverse(), stops: stops.reverse() };
+		}
+		return null;
+	}
+
+	// Ждём отрисовки хода: старая кнопка пропала (или фрейм перезагрузился) и появились новые
+	async function chaseWaitForMove(oldDoc, oldButton) {
+		const deadline = Date.now() + CHASE_MOVE_TIMEOUT * 1000;
+		while (Date.now() < deadline) {
+			await awaitSec(CHASE_POLL_SEC);
+			const doc = chaseDoc();
+			const gone = doc !== oldDoc || !oldButton.isConnected;
+			const fresh = CHASE_DIRS.some((d) => {
+				const b = doc?.querySelector('.' + CHASE_BUTTON[d]);
+				return b && b !== oldButton;
+			});
+			if (gone && fresh) return true;
+		}
+		return false;
+	}
+
+	async function chase() {
+		chaseRunning = true;
+		chaseStopRequested = false;
+		try {
+			const field = chaseParse(chaseDoc());
+			if (!field) return chaseInfo('Погоня: поле не найдено — открой погоню во фрейме');
+			if (field.carPos === -1) return chaseInfo('Погоня: машина не найдена');
+			if (!field.finishes.length) return chaseInfo('Погоня: финиш не найден');
+
+			const plan = chaseSolve(field);
+			if (!plan) return chaseInfo('Погоня: финиш недостижим');
+
+			const fmt = (p) => `(${ Math.floor(p / CHASE_SIZE) + 1 }, ${ (p % CHASE_SIZE) + 1 })`;
+			const arrows = plan.dirs.map((d) => CHASE_ARROW[d]).join(' ');
+			console.log(`Погоня: бонусы ${ plan.bonuses }/${ plan.total }, ходов ${ plan.dirs.length }: ${ arrows }`);
+
+			for (let i = 0; i < plan.dirs.length; i++) {
+				if (chaseStopRequested) return chaseInfo(`Погоня: остановлено перед ходом ${ i + 1 }/${ plan.dirs.length }`);
+
+				const dir = plan.dirs[i];
+				const doc = chaseDoc();
+				const btn = doc.querySelector('.' + CHASE_BUTTON[dir]);
+				if (!btn) return chaseInfo(`Погоня: нет кнопки .${ CHASE_BUTTON[dir] } на ходу ${ i + 1 } — остановился`);
+
+				btn.click();
+				chaseInfo(`Погоня: ${ i + 1 }/${ plan.dirs.length } ${ CHASE_ARROW[dir] } (бонусы ${ plan.bonuses }/${ plan.total })`);
+
+				if (i === plan.dirs.length - 1) break; // последний ход заканчивает уровень
+
+				if (!(await chaseWaitForMove(doc, btn))) {
+					return chaseInfo(`Погоня: ход ${ i + 1 } не отрисовался за ${ CHASE_MOVE_TIMEOUT } с — остановился`);
+				}
+				const now = chaseParse(chaseDoc());
+				if (!now || now.key !== field.key) return chaseInfo(`Погоня: после хода ${ i + 1 } уровень перерисовался — остановился`);
+				if (now.carPos !== plan.stops[i]) {
+					return chaseInfo(`Погоня: после хода ${ i + 1 } машина в ${ fmt(now.carPos) }, ожидалась ${ fmt(plan.stops[i]) } — остановился`);
+				}
+			}
+			chaseInfo(`Погоня: уровень пройден, бонусы ${ plan.bonuses }/${ plan.total }`);
+		} finally {
+			chaseRunning = false;
+		}
 	}
 })();
