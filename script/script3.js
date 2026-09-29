@@ -1012,6 +1012,120 @@
 		}
 	}
 
+	// ================= Аномалия (детектор) =================
+	// Каждый ход: по углу артефакта выбираем направление(я); если в секторе направления
+	// на кольце 2 есть не синяя аномалия — сначала болт в эту сторону, потом шаг.
+	// Болтов нет, а проход занят — перезапуск аномалии (newSearch).
+	// Наступили на артефакт — игра забирает его сама; возвращаемся на локацию (urlZona),
+	// чтобы infinityArtifact увидел новый поиск / таймер и пошёл дальше.
+
+	const ANO_MIN_HP = 40;       // стоп, если после удара % у артефакта (#your_hp) ≤ этого
+	const ANO_MAX_STEPS = 40;    // защита от хождения кругами
+	const ANO_TIMEOUT = 8;       // сек ожидания перерисовки после действия
+	const ANO_DIR_ANGLE = { left: 0, top: 90, right: 180 };
+	const ANO_SECTOR = {
+		left: (i) => i <= 3,            // 0°..33.75°
+		top: (i) => i >= 6 && i <= 10,  // 67.5°..112.5°
+		right: (i) => i >= 13,          // 146.25°..180°
+	};
+
+	function anoInfo(text) {
+		document.querySelector('#info').innerHTML = text;
+		console.log('[ano]', text);
+	}
+
+	function anoParse(doc) {
+		const num = (s, re) => { const m = re.exec(s || ''); return m ? parseFloat(m[1]) : null; };
+		const anomalies = [];
+		let artefact = null;
+		const imgs = doc?.querySelectorAll('img[src*="/detectors/anomaly_icon"], img[src*="/detectors/detector_artefact"]') ?? [];
+		for (const img of imgs) {
+			const angle = num(img.parentElement.getAttribute('style'), /rotate\(([-\d.]+)deg\)/);
+			const pad = num(img.getAttribute('style'), /padding-left:\s*([-\d.]+)%/);
+			if (angle == null || pad == null) continue;
+			const cell = { i: Math.round(angle / 11.25), r: Math.round((50 - pad) / 6.25) };
+			const src = img.getAttribute('src');
+			if (src.includes('detector_artefact')) artefact = cell;
+			else anomalies.push({ ...cell, blue: src.includes('anomaly_icon_blue') });
+		}
+		if (!artefact && !anomalies.length) return null;
+		const hp = doc.querySelector('#your_hp');
+		const bolts = [...doc.querySelectorAll('small.dan')].find((e) => /шт/.test(e.textContent));
+		return {
+			artefact, anomalies,
+			hp: hp ? parseFloat(hp.textContent) : null,
+			bolts: bolts ? parseInt(bolts.textContent.replace(/\D/g, ''), 10) : 0,
+			sig: JSON.stringify([artefact, anomalies, bolts?.textContent]),
+		};
+	}
+
+	function anoWantedDirs(art) {
+		const a = art.i * 11.25;
+		const dirs = [];
+		if (a < 78.75) dirs.push('left');
+		if (a > 22.5 && a < 157.5) dirs.push('top');
+		if (a > 101.25) dirs.push('right');
+		return dirs.sort((x, y) => Math.abs(a - ANO_DIR_ANGLE[x]) - Math.abs(a - ANO_DIR_ANGLE[y]));
+	}
+
+	function anoPlan(f) {
+		const dirs = anoWantedDirs(f.artefact);
+		const blocked = (d) => f.anomalies.some((a) => !a.blue && a.r === 2 && ANO_SECTOR[d](a.i));
+		const free = dirs.find((d) => !blocked(d));
+		if (free) return { bolt: false, dir: free };
+		if (f.bolts > 0) return { bolt: true, dir: dirs[0] };
+		return null;
+	}
+
+	// перехват ответа сервера во фрейме (урон / выброс)
+	function anoHookAjax() {
+		const win = getFrame().contentWindow;
+		const $f = win.jQuery;
+		if (!$f || $f.ajax.__anoHooked) return;
+		const orig = $f.ajax;
+		$f.ajax = function(opts) {
+			if (opts && typeof opts.url === 'string' && opts.url.includes('artefacts_engine.php')) {
+				const ok = opts.success;
+				opts.success = function(data, ...rest) {
+					win.__anoLast = data;
+					return ok && ok.call(this, data, ...rest);
+				};
+			}
+			return orig.apply(this, arguments);
+		};
+		$f.ajax.__anoHooked = true;
+	}
+
+	// клик по кнопке во фрейме и ожидание нового кадра; возвращает { dmg, left } (left — ушли со страницы аномалии)
+	async function anoAct(mod) {
+		const doc = getFrame().contentDocument;
+		const btn = doc.querySelector(`a[href="?mod=${ mod }"]`);
+		if (!btn) throw new Error('нет кнопки ' + mod);
+		anoHookAjax();
+		const win = getFrame().contentWindow;
+		win.__anoLast = null;
+		const prev = anoParse(doc)?.sig;
+		btn.click();
+
+		const deadline = Date.now() + ANO_TIMEOUT * 1000;
+		let resp = null;
+		while (Date.now() < deadline) {
+			await awaitSec(0.2);
+			if (getFrame().contentDocument !== doc) return { dmg: 0, left: true }; // редирект (выброс/смерть)
+			resp = resp || win.__anoLast;
+			if (!resp) continue;
+			const info = Number(resp.important_info) || 0;
+			if (info === 999) throw new Error('сервер: что-то пошло не по плану (999)');
+			if (info > 999) { await awaitSec(2); return { dmg: info, left: true }; }
+			if (info > 0) await awaitSec(1.6); // при уроне страница перерисовывается через 1.5 с
+			const curDoc = getFrame().contentDocument;
+			if (/Вы нашли артефакт/.test(curDoc.body?.textContent || '')) return { dmg: info, left: false };
+			const cur = anoParse(curDoc);
+			if (cur && cur.sig !== prev) { await awaitSec(0.3); return { dmg: info, left: false }; }
+		}
+		throw new Error('кадр не перерисовался после ' + mod);
+	}
+
 	async function searchArtifact(newSearch) {
 		if (getHp() === '0') {
 			await goto(`${ urlZona }?&apt=use`);
@@ -1019,7 +1133,7 @@
 			await startOneSearchArtifact();
 			return;
 		}
-		if (newSearch) {
+		if (newSearch) { // перезапуск аномалии
 			if (getCurrentNameLoc().includes('Север')) {
 				await walk('c');
 				await walk('n');
@@ -1040,79 +1154,49 @@
 			return;
 		}
 
-		let doc = getFrame().contentDocument;
-		const artifactInfo = doc.querySelector('#artefacts .q2.lal i')?.innerHTML;
-		if (!artifactInfo) return;
+		const found = () => /Вы нашли артефакт/.test(getFrame().contentDocument?.body?.textContent || '');
+		const finish = async () => {
+			const name = (/Вы нашли артефакт\s*([^!\n]*)/.exec(getFrame().contentDocument.body.textContent) || [])[1] || '';
+			anoInfo(`Аномалия: артефакт найден ${ name.trim() }`);
+			await goto(urlZona); // обратно на точку: infinityArtifact дальше сам решит — новый поиск или следующая точка
+		};
 
-		const distanceText = 'Расстояние: ';
-		const distanceIndex = artifactInfo.indexOf(distanceText);
-		const distance = Number(artifactInfo.slice(distanceIndex + distanceText.length, distanceIndex + distanceText.length + 2).trim());
+		for (let n = 0; n < ANO_MAX_STEPS; n++) {
+			if (found()) return finish();
+			const f = anoParse(getFrame().contentDocument);
+			if (!f) return anoInfo('Аномалия: детектор не найден');
+			if (!f.artefact) return anoInfo('Аномалия: артефакт не виден');
 
-		if (distance === 0) return;
-
-		await goto(urlZona);
-		doc = getFrame().contentDocument;
-
-		const hpPercent = Number(doc.querySelectorAll('#top .rblock.blue.esmall')[1].querySelector('td:last-child .value-block.lh1').textContent.slice(0, -1));
-		const boltText = 'Болты: ';
-		const boltIndex = artifactInfo.indexOf(boltText);
-		const countBolt = Number(artifactInfo.slice(boltIndex + boltText.length, boltIndex + boltText.length + 1));
-		const maxChargeText = 'Макс. заряд: ';
-		const maxChargeIndex = artifactInfo.indexOf(maxChargeText);
-		const countMaxCharge = Number(artifactInfo.slice(maxChargeIndex + maxChargeText.length, maxChargeIndex + maxChargeText.length + 1));
-		let indicator;
-		if (artifactInfo.indexOf('green') > 0) {
-			indicator = 'green';
-		} else if (artifactInfo.indexOf('yellow') > 0) {
-			indicator = 'yellow';
-		} else if (artifactInfo.indexOf('red') > 0) {
-			indicator = 'red';
-		}
-
-		if (countBolt >= distance) {
-			await goto(`${ urlZona }?mod=bolt_search`);
-			await goto(`${ urlZona }?mod=step_search`);
-			await searchArtifact();
-			return;
-		}
-
-		if (indicator === 'red' && countBolt > 0) {
-			await goto(`${ urlZona }?mod=bolt_search`);
-			await goto(`${ urlZona }?mod=step_search`);
-			await searchArtifact();
-			return;
-		}
-
-		if (indicator === 'yellow' && hpPercent > 72) {
-			await goto(`${ urlZona }?mod=step_search`);
-			await searchArtifact();
-			return;
-		}
-
-		if (indicator === 'yellow' && countMaxCharge <= 8 && countBolt > 0) {
-			await goto(`${ urlZona }?mod=bolt_search`);
-			await goto(`${ urlZona }?mod=step_search`);
-			await searchArtifact();
-		}
-
-		if (indicator === 'green' && hpPercent > 24) {
-			await goto(`${ urlZona }?mod=step_search`);
-			await searchArtifact();
-			return;
-		}
-
-		if (hpPercent > countMaxCharge * 12) {
-			await goto(`${ urlZona }?mod=step_search`);
-			await searchArtifact();
-		} else {
-			if (indicator === 'red' && countMaxCharge === 9) {
+			const p = anoPlan(f);
+			if (!p) {
+				anoInfo('Аномалия: проход занят, болтов нет — перезапуск');
 				await searchArtifact(true);
 				return;
 			}
-			await goto(`${ urlZona }?&apt=use`);
-			await awaitSec(2);
-			await searchArtifact();
+
+			anoInfo(`Аномалия: ход ${ n + 1 }: ${ p.bolt ? 'болт + ' : '' }${ p.dir } (арт ${ f.artefact.i * 11.25 }° r${ f.artefact.r }, болтов ${ f.bolts })`);
+
+			if (p.bolt) {
+				const b = await anoAct('bolt_' + p.dir);
+				if (b.left) return anoInfo('Аномалия: ушли со страницы после болта');
+				await awaitSec(0.7 + Math.random() * 0.6);
+			}
+
+			const s = await anoAct('step_' + p.dir);
+			if (found()) return finish();
+			if (s.left) {
+				anoInfo(`Аномалия: страница сменилась после шага${ s.dmg ? ` (код ${ s.dmg })` : '' }`);
+				return;
+			}
+			if (s.dmg > 0) {
+				const hp = anoParse(getFrame().contentDocument)?.hp;
+				console.warn(`[ano] урон ${ s.dmg }% на ходу ${ p.bolt ? 'bolt+' : '' }${ p.dir }, осталось ${ hp }%`);
+				if (hp != null && hp <= ANO_MIN_HP) return anoInfo(`Аномалия: урон ${ s.dmg }%, осталось ${ hp }% — стоп`);
+			}
+			await awaitSec(0.7 + Math.random() * 0.6);
 		}
+		anoInfo(`Аномалия: не дошёл за ${ ANO_MAX_STEPS } ходов — перезапуск`);
+		await searchArtifact(true);
 	}
 
 	async function infinityArtifact() {
