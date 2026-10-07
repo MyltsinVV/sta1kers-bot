@@ -986,7 +986,7 @@
 			return startOneSearchArtifact()
 		}
 
-		const timer = getFrame().contentDocument.querySelector('img[src="../img/ico/time.png"]')
+		const timer = getFrame().contentDocument.querySelector('#artefacts img[src="../img/ico/time.png"]')
 		if (timer) {
 			await awaitSec(2)
 			return startOneSearchArtifact()
