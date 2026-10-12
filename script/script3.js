@@ -401,11 +401,12 @@
 						<input type='button' id='stop' value='Стоп' style='display: none'>
 				</label>
 				<input style="margin-left: 5px" type='button' id='daily' value='Daily'>
-				<input style="margin-left: 5px" type='button' id='artifact' value='One artifact'>
-				<input style="margin-left: 5px" type='button' id='artifactInfinity' value='Infinity artifacts'>
+				<input style="margin-left: 5px" type='button' id='artifact' value='1 artifact'>
+				<input style="margin-left: 5px" type='button' id='artifactInfinity' value='∞ artifacts'>
 				<span id="timer">9 сек</span>
-				<input style="margin-left: 5px" type='button' id='raid' value='Рейд'>
-				<input style="margin-left: 5px" type='button' id='chase' value='Погоня'>
+				<input style="margin-left: 5px" type='button' id='raid' value='1 Рейд'>
+				<input style="margin-left: 5px" type='button' id='raidInfinity' value='∞ Рейд'>
+				<input style="margin-left: 5px; display: none" type='button' id='chase' value='Погоня'>
 			</div>
 			<div id="info" style="height: 26px; line-height: 26px; padding: 0 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></div>
 		`);
@@ -435,7 +436,7 @@
 		document.querySelector('#artifactInfinity').addEventListener('click', async function() {
 			await infinityArtifact();
 		});
-		document.querySelector('#raid').addEventListener('click', async function() {
+		document.querySelector('#raidInfinity').addEventListener('click', async function() {
 			await raid();
 		});
 		document.querySelector('#chase').addEventListener('click', async function() {
@@ -632,7 +633,7 @@
 		await questZulus(); // Квест Зулуса
 		await questStrelokStart();// Взять квест Стрелка
 		await transitionFromPripyatToJupiter(); // Переход на Юпитер
-		// await questKostopravStart()
+		await questKostopravStart(); // Взять квест Костоправа
 		await searchSwagJupiter(); // Поиск хабара на Юпитере
 		await questSokolov(); // Квест Соколова
 		await questStrelokProgress(); // Выполнить квест Стрелка
@@ -926,6 +927,7 @@
 	async function questKostopravStart() {
 		await walk('n')
 		await goto(domen + 'npc/kostoprav.php');
+		await walk('c')
 	}
 
 	async function questStrelokCompleted() {
@@ -1256,7 +1258,7 @@
 		}
 	}
 
-	async function raid() {
+	async function raid(isInfinity) {
 		await goto(urlZona + '?mod=create_party');
 		await goto(domen + 'raid_start.php');
 
@@ -1264,19 +1266,23 @@
 		startRaid?.click();
 		await awaitSec(2);
 
-		await raidGame()
+		await raidGame(isInfinity)
 	}
 
-	async function raidGame() {
+	async function raidGame(isInfinity) {
 		const endScreen = getFrame().contentDocument.querySelector('#endScreen')
 		if (endScreen.style.opacity !== '0') {
 			const nextBtn = getFrame().contentDocument.querySelector('#nextFieldBtn')
 			nextBtn.click();
 			await awaitSec(2);
 
-			const startRaid = getFrame().contentDocument.querySelector('img[src="../raids/img/raids_start_button.jpg"]')
-			startRaid.click();
-			await awaitSec(2);
+			if (isInfinity) {
+				const startRaid = getFrame().contentDocument.querySelector('img[src="../raids/img/raids_start_button.jpg"]')
+				startRaid.click();
+				await awaitSec(2);
+			} else {
+				return
+			}
 		}
 
 		const mutants = getFrame().contentDocument.querySelectorAll('.raid_mutants_wrap img.burer_breath');
@@ -1293,7 +1299,7 @@
 		}
 
 		await awaitSec(11);
-		await raidGame()
+		await raidGame(isInfinity)
 	}
 
 	// ================= Погоня =================
