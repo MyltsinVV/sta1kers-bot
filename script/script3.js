@@ -436,8 +436,11 @@
 		document.querySelector('#artifactInfinity').addEventListener('click', async function() {
 			await infinityArtifact();
 		});
+		document.querySelector('#raid').addEventListener('click', async function() {
+			await raid(false);
+		});
 		document.querySelector('#raidInfinity').addEventListener('click', async function() {
-			await raid();
+			await raid(true);
 		});
 		document.querySelector('#chase').addEventListener('click', async function() {
 			// Повторное нажатие во время езды — остановка после текущего хода
